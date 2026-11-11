@@ -40,7 +40,7 @@ body {
 }
 .topbar h1 { font-size: 18px; margin: 0; white-space: nowrap; letter-spacing: .02em; }
 #search {
-  flex: 1; max-width: 420px; margin-left: auto;
+  flex: 1; min-width: 0; max-width: 420px; margin-left: auto;
   padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
   background: var(--panel); color: var(--text); font: inherit;
 }
@@ -135,7 +135,15 @@ body.sidebar-closed .sidebar { margin-left: calc(-1 * var(--sidebar-w)); }
 
 /* phones */
 @media (max-width: 720px) {
+  .topbar { gap: 8px; }
   .topbar h1 { font-size: 16px; }
+  .install-btn { padding: 7px 10px; }
   .sidebar { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; box-shadow: 4px 0 16px rgba(0,0,0,.15); }
   .detail { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-width: none; max-height: 60%; }
+}
+
+/* Very narrow phones: when the install button is showing, drop the title so
+   the search box keeps a usable width. */
+@media (max-width: 480px) {
+  .topbar:has(#install-app:not([hidden])) h1 { display: none; }
 }

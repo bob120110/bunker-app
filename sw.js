@@ -6,7 +6,7 @@
 // - Map tiles and fonts: cached as they are viewed (cache-first), capped so the
 //   cache can't grow forever. Areas you've looked at keep working offline.
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL = `shell-${VERSION}`;
 const DATA = 'data';
 const TILES = 'tiles';
