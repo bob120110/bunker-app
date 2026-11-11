@@ -328,3 +328,52 @@ main().catch((err) => {
   $('#detail-body').innerHTML = `<p class="note">Impossibile caricare i dati: ${esc(err.message)}</p>`;
   $('#detail').hidden = false;
 });
+
+// ---------- PWA: offline + install ----------
+
+function setupPwa() {
+  if ('serviceWorker' in navigator && window.isSecureContext) {
+    navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Service worker non registrato:', err));
+  }
+
+  const banner = $('#offline-banner');
+  const updateOnline = () => { banner.hidden = navigator.onLine; };
+  window.addEventListener('online', updateOnline);
+  window.addEventListener('offline', updateOnline);
+  updateOnline();
+
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  if (standalone) return;
+
+  // Chrome/Edge/Android: show our own "Installa" button.
+  let deferred = null;
+  const btn = $('#install-app');
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferred = e;
+    btn.hidden = false;
+  });
+  btn.onclick = async () => {
+    if (!deferred) return;
+    deferred.prompt();
+    await deferred.userChoice;
+    deferred = null;
+    btn.hidden = true;
+  };
+  window.addEventListener('appinstalled', () => { btn.hidden = true; });
+
+  // iPhone/iPad Safari has no install prompt: show a one-time hint instead.
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let dismissed = false;
+  try { dismissed = localStorage.getItem('iosHintDismissed') === '1'; } catch { /* storage blocked */ }
+  if (ios && !dismissed) {
+    $('#ios-install-hint').hidden = false;
+    $('#ios-hint-close').onclick = () => {
+      $('#ios-install-hint').hidden = true;
+      try { localStorage.setItem('iosHintDismissed', '1'); } catch { /* ignore */ }
+    };
+  }
+}
+
+setupPwa();

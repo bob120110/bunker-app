@@ -7,7 +7,8 @@
   --accent: #b9770e;
   --sidebar-w: 300px;
   --detail-w: 360px;
-  --topbar-h: 52px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --topbar-h: calc(52px + var(--safe-top));
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -33,7 +34,7 @@ body {
 .topbar {
   height: var(--topbar-h);
   display: flex; align-items: center; gap: 12px;
-  padding: 0 12px;
+  padding: var(--safe-top) max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
   border-bottom: 1px solid var(--border);
   background: var(--bg);
 }
@@ -111,6 +112,21 @@ body.sidebar-closed .sidebar { margin-left: calc(-1 * var(--sidebar-w)); }
 .rel-verified { background: #d4efdf; color: #145a32; }
 .rel-partial { background: #fcf3cf; color: #7d6608; }
 .rel-unverified { background: #fadbd8; color: #78281f; }
+
+/* PWA */
+.install-btn {
+  flex: none; padding: 7px 12px; border: 0; border-radius: 8px;
+  background: var(--accent); color: #1c2833; font: inherit; font-weight: 600; cursor: pointer;
+}
+.offline-banner, .ios-hint {
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 10;
+  max-width: calc(100% - 32px); padding: 8px 14px; border-radius: 10px;
+  background: #1c2833; color: #fff; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,.25);
+}
+.offline-banner { top: calc(var(--topbar-h) + 8px); }
+.ios-hint { bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 8px; }
+.ios-hint .icon-btn { color: #fff; flex: none; }
+.offline-banner[hidden], .ios-hint[hidden] { display: none; }
 
 /* basemap switcher */
 .basemap-ctrl { display: flex; flex-direction: column; }

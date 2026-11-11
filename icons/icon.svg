@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#1c2833"/>
+  <!-- ground line -->
+  <rect x="64" y="372" width="384" height="28" rx="6" fill="#7d6608"/>
+  <!-- bunker dome -->
+  <path d="M120 372V262a136 136 0 0 1 272 0v110z" fill="#b9770e"/>
+  <!-- firing slit -->
+  <rect x="186" y="262" width="140" height="34" rx="8" fill="#1c2833"/>
+</svg>

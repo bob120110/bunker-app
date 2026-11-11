@@ -21,6 +21,17 @@ python3 -m http.server 8000
 ```
 Then open http://localhost:8000. Opening the file directly with `file://` won't work, because the data is loaded with `fetch`.
 
+## Installable app (PWA)
+The site can be installed on a phone or computer as an app.
+- **Android / Chrome / Edge:** tap the **Installa** button in the top bar, or use "Install app" in the browser menu.
+- **iPhone / iPad (Safari):** tap **Share**, then **Add to Home Screen**. The app shows a one-time hint about this.
+
+Offline, the app still opens, with the bunker data and any map areas already viewed (up to about 1,500 map tiles are kept). `sw.js` handles this.
+
+**On every deploy, bump `VERSION` in `sw.js`.** Otherwise installed copies keep serving the old files. Installing needs HTTPS (or `localhost`). `.htaccess` sets the right file type for the manifest and stops browsers caching `sw.js`.
+
+To rebuild the PNG icons after changing `icons/icon.svg`, re-render it at 192, 512 and 180 (Apple) pixels, plus a 512 "maskable" version with the artwork scaled to about 72%.
+
 ## Data
 All data lives in `data/bunkers.geojson`, one Point feature per structure. Run the validator after every edit:
 

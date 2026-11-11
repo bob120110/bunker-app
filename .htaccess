@@ -1,0 +1,15 @@
+# Apache settings for static hosting (e.g. Aruba).
+
+AddType application/manifest+json .webmanifest
+AddType application/geo+json .geojson
+
+<IfModule mod_headers.c>
+  # The service worker and data must never be stuck in the HTTP cache,
+  # or users would not receive updates.
+  <FilesMatch "^(sw\.js|index\.html|manifest\.webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.geojson$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

@@ -2,10 +2,17 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Bunker Atlas</title>
   <meta name="description" content="Atlante mondiale aperto di bunker, rifugi e fortificazioni storiche.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Cpath d=%22M3 26h26v3H3zM6 26V15a10 10 0 0 1 20 0v11z%22 fill=%22%237d6608%22/%3E%3Crect x=%2211%22 y=%2216%22 width=%2210%22 height=%223%22 fill=%22%231c2833%22/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#1c2833">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Bunker Atlas">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -14,7 +21,13 @@
     <button id="toggle-sidebar" class="icon-btn" aria-controls="sidebar" aria-expanded="true" title="Filtri">☰</button>
     <h1>Bunker Atlas</h1>
     <input id="search" type="search" placeholder="Cerca per nome o località…" autocomplete="off" aria-label="Cerca">
+    <button id="install-app" class="install-btn" hidden>Installa</button>
   </header>
+  <div id="offline-banner" class="offline-banner" hidden>Sei offline: dati e zone della mappa già visitate restano disponibili.</div>
+  <div id="ios-install-hint" class="ios-hint" hidden>
+    Per installare l'app: tocca <strong>Condividi</strong> e poi <strong>Aggiungi alla schermata Home</strong>.
+    <button type="button" class="icon-btn" id="ios-hint-close" title="Chiudi">✕</button>
+  </div>
 
   <main class="layout">
     <aside id="sidebar" class="sidebar" aria-label="Filtri e risultati">
