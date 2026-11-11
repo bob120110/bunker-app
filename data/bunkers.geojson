@@ -1,0 +1,120 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-0.6928, 49.3433] },
+      "properties": { "id": "fr-longues-sur-mer", "name": "Batteria di Longues-sur-Mer", "alt_names": ["Batterie de Longues-sur-Mer"], "place": "Longues-sur-Mer, Normandia", "country": "FR", "builder": "Kriegsmarine (Germania)", "category": "fortification", "period": "ww2", "built": "1943–1944", "function": "Batteria costiera del Vallo Atlantico, quattro casematte con cannoni da 150 mm", "dimensions": "", "status": "museum", "access": "Sito all'aperto, accessibile liberamente", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Longues-sur-Mer battery", "url": "https://en.wikipedia.org/wiki/Longues-sur-Mer_battery" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [6.3653, 49.3517] },
+      "properties": { "id": "fr-hackenberg", "name": "Ouvrage Hackenberg", "alt_names": ["Fort Hackenberg"], "place": "Veckring, Mosella", "country": "FR", "builder": "Esercito francese", "category": "fortification", "period": "interwar", "built": "1929–1935", "function": "Grande opera della Linea Maginot, artiglieria e gallerie sotterranee", "dimensions": "Circa 10 km di gallerie", "status": "museum", "access": "Visite guidate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Ouvrage Hackenberg", "url": "https://en.wikipedia.org/wiki/Ouvrage_Hackenberg" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [7.9244, 48.9603] },
+      "properties": { "id": "fr-schoenenbourg", "name": "Ouvrage Schoenenbourg", "alt_names": [], "place": "Hunspach, Alsazia", "country": "FR", "builder": "Esercito francese", "category": "fortification", "period": "interwar", "built": "1931–1935", "function": "Opera d'artiglieria della Linea Maginot", "dimensions": "", "status": "museum", "access": "Visite in stagione", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Ouvrage Schoenenbourg", "url": "https://en.wikipedia.org/wiki/Ouvrage_Schoenenbourg" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [2.1828, 50.8264] },
+      "properties": { "id": "fr-eperlecques", "name": "Blockhaus d'Éperlecques", "alt_names": ["Kraftwerk Nord West", "Watten bunker"], "place": "Éperlecques, Passo di Calais", "country": "FR", "builder": "Organisation Todt (Germania)", "category": "military", "period": "ww2", "built": "1943–1944", "function": "Base di lancio prevista per i razzi V-2", "dimensions": "", "status": "museum", "access": "Museo aperto al pubblico", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Blockhaus d'Éperlecques", "url": "https://en.wikipedia.org/wiki/Blockhaus_d%27%C3%89perlecques" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [2.2389, 50.7022] },
+      "properties": { "id": "fr-la-coupole", "name": "La Coupole", "alt_names": ["Bauvorhaben 21"], "place": "Helfaut, Passo di Calais", "country": "FR", "builder": "Organisation Todt (Germania)", "category": "underground", "period": "ww2", "built": "1943–1944", "function": "Complesso sotterraneo per l'assemblaggio e il lancio dei V-2", "dimensions": "", "status": "museum", "access": "Museo e planetario", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – La Coupole", "url": "https://en.wikipedia.org/wiki/La_Coupole" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-0.1291, 51.5021] },
+      "properties": { "id": "gb-churchill-war-rooms", "name": "Churchill War Rooms", "alt_names": ["Cabinet War Rooms"], "place": "Westminster, Londra", "country": "GB", "builder": "Governo britannico", "category": "underground", "period": "ww2", "built": "1938–1939", "function": "Centro di comando sotterraneo del governo britannico", "dimensions": "", "status": "museum", "access": "Museo (Imperial War Museums)", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Churchill War Rooms", "url": "https://en.wikipedia.org/wiki/Churchill_War_Rooms" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [0.2614, 51.6658] },
+      "properties": { "id": "gb-kelvedon-hatch", "name": "Kelvedon Hatch Secret Nuclear Bunker", "alt_names": [], "place": "Kelvedon Hatch, Essex", "country": "GB", "builder": "Governo britannico", "category": "civil_shelter", "period": "cold_war", "built": "1952–1953", "function": "Centro di governo regionale in caso di guerra nucleare", "dimensions": "Tre piani sotterranei", "status": "museum", "access": "Museo privato", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Kelvedon Hatch Secret Nuclear Bunker", "url": "https://en.wikipedia.org/wiki/Kelvedon_Hatch_Secret_Nuclear_Bunker" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-2.5450, 53.0447] },
+      "properties": { "id": "gb-hack-green", "name": "Hack Green Secret Nuclear Bunker", "alt_names": ["RAF Hack Green"], "place": "Nantwich, Cheshire", "country": "GB", "builder": "Governo britannico", "category": "civil_shelter", "period": "cold_war", "built": "Anni '40, riconvertito negli anni '80", "function": "Stazione radar, poi sede di governo regionale", "dimensions": "", "status": "museum", "access": "Museo aperto al pubblico", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Hack Green Secret Nuclear Bunker", "url": "https://en.wikipedia.org/wiki/Hack_Green_Secret_Nuclear_Bunker" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [13.3803, 52.5025] },
+      "properties": { "id": "de-anhalter-bunker", "name": "Anhalter Bunker", "alt_names": ["Berlin Story Bunker"], "place": "Kreuzberg, Berlino", "country": "DE", "builder": "Germania nazista", "category": "civil_shelter", "period": "ww2", "built": "1942–1943", "function": "Rifugio antiaereo per i viaggiatori della stazione Anhalter", "dimensions": "", "status": "reconverted", "access": "Museo/esposizione", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Anhalter Bunker", "url": "https://de.wikipedia.org/wiki/Anhalter_Bunker" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [13.3842, 52.5447] },
+      "properties": { "id": "de-flakturm-humboldthain", "name": "Flakturm Humboldthain", "alt_names": [], "place": "Gesundbrunnen, Berlino", "country": "DE", "builder": "Germania nazista", "category": "fortification", "period": "ww2", "built": "1941–1942", "function": "Torre contraerea e rifugio", "dimensions": "", "status": "museum", "access": "Visite guidate (Berliner Unterwelten)", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Flakturm", "url": "https://en.wikipedia.org/wiki/Flak_tower" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [9.9686, 53.5562] },
+      "properties": { "id": "de-flakturm-iv-hamburg", "name": "Flakturm IV (Bunker di St. Pauli)", "alt_names": ["Feldstraßenbunker"], "place": "St. Pauli, Amburgo", "country": "DE", "builder": "Germania nazista", "category": "fortification", "period": "ww2", "built": "1942", "function": "Torre contraerea e rifugio civile", "dimensions": "", "status": "reconverted", "access": "Riconvertito: locali, hotel e giardino pensile", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Flak tower", "url": "https://en.wikipedia.org/wiki/Flak_tower" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [16.3757, 48.2257] },
+      "properties": { "id": "at-flakturm-augarten", "name": "Flakturm Augarten", "alt_names": [], "place": "Augarten, Vienna", "country": "AT", "builder": "Germania nazista", "category": "fortification", "period": "ww2", "built": "1944–1945", "function": "Torre contraerea", "dimensions": "", "status": "abandoned", "access": "Visibile dall'esterno, interni non accessibili", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Flak tower", "url": "https://en.wikipedia.org/wiki/Flak_tower" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [21.4936, 54.0791] },
+      "properties": { "id": "pl-wolfsschanze", "name": "Tana del Lupo", "alt_names": ["Wolfsschanze", "Wilczy Szaniec"], "place": "Gierłoż, Masuria", "country": "PL", "builder": "Organisation Todt (Germania)", "category": "military", "period": "ww2", "built": "1940–1944", "function": "Quartier generale di Hitler sul fronte orientale", "dimensions": "", "status": "museum", "access": "Rovine visitabili", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Wolf's Lair", "url": "https://en.wikipedia.org/wiki/Wolf%27s_Lair" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [12.5115, 41.9137] },
+      "properties": { "id": "it-villa-torlonia", "name": "Bunker di Villa Torlonia", "alt_names": [], "place": "Villa Torlonia, Roma", "country": "IT", "builder": "Regime fascista", "category": "civil_shelter", "period": "ww2", "built": "1940–1943", "function": "Rifugio antiaereo e antigas della residenza di Mussolini", "dimensions": "", "status": "museum", "access": "Visite guidate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Villa Torlonia (Roma)", "url": "https://it.wikipedia.org/wiki/Villa_Torlonia_(Roma)" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [12.5110, 42.2380] },
+      "properties": { "id": "it-soratte", "name": "Bunker del Monte Soratte", "alt_names": [], "place": "Sant'Oreste, Lazio", "country": "IT", "builder": "Esercito italiano, poi Wehrmacht e NATO", "category": "underground", "period": "ww2", "built": "1937–1943, ampliato durante la Guerra fredda", "function": "Gallerie militari, comando tedesco, poi rifugio antiatomico", "dimensions": "Circa 4 km di gallerie", "status": "museum", "access": "Visite guidate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Bunker del Monte Soratte", "url": "https://it.wikipedia.org/wiki/Bunker_del_Monte_Soratte" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [14.2457, 40.8353] },
+      "properties": { "id": "it-galleria-borbonica", "name": "Galleria Borbonica", "alt_names": ["Tunnel Borbonico"], "place": "Monte Echia, Napoli", "country": "IT", "builder": "Regno delle Due Sicilie", "category": "civil_shelter", "period": "ww2", "built": "1853–1855, rifugio dal 1939", "function": "Galleria ottocentesca usata come rifugio antiaereo", "dimensions": "", "status": "museum", "access": "Visite guidate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Galleria Borbonica", "url": "https://it.wikipedia.org/wiki/Galleria_Borbonica" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [8.5636, 46.5584] },
+      "properties": { "id": "ch-sasso-san-gottardo", "name": "Sasso San Gottardo", "alt_names": ["Forte Sasso da Pigna"], "place": "Passo del San Gottardo", "country": "CH", "builder": "Esercito svizzero", "category": "fortification", "period": "ww2", "built": "1941–1943", "function": "Fortezza d'artiglieria del Ridotto nazionale", "dimensions": "", "status": "museum", "access": "Museo, aperto in estate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Sasso San Gottardo", "url": "https://it.wikipedia.org/wiki/Sasso_San_Gottardo" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [8.2913, 47.0443] },
+      "properties": { "id": "ch-sonnenberg", "name": "Rifugio civile del tunnel Sonnenberg", "alt_names": ["Zivilschutzanlage Sonnenberg"], "place": "Lucerna", "country": "CH", "builder": "Protezione civile svizzera", "category": "civil_shelter", "period": "cold_war", "built": "1971–1976", "function": "Rifugio antiatomico per 20.000 persone dentro un tunnel autostradale", "dimensions": "", "status": "museum", "access": "Visite guidate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Sonnenberg Tunnel", "url": "https://en.wikipedia.org/wiki/Sonnenberg_Tunnel" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [17.9608, 43.6447] },
+      "properties": { "id": "ba-ark-d0", "name": "Bunker di Tito (ARK D-0)", "alt_names": ["Atomska ratna komanda"], "place": "Konjic", "country": "BA", "builder": "Jugoslavia", "category": "underground", "period": "cold_war", "built": "1953–1979", "function": "Comando sotterraneo antiatomico per i vertici jugoslavi", "dimensions": "", "status": "museum", "access": "Visite guidate e biennale d'arte", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – ARK D-0", "url": "https://en.wikipedia.org/wiki/ARK_D-0" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [19.8215, 41.3283] },
+      "properties": { "id": "al-bunkart-2", "name": "Bunk'Art 2", "alt_names": [], "place": "Tirana", "country": "AL", "builder": "Albania comunista", "category": "civil_shelter", "period": "cold_war", "built": "1981–1986", "function": "Rifugio antiatomico del Ministero dell'Interno", "dimensions": "", "status": "museum", "access": "Museo", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Bunk'Art", "url": "https://en.wikipedia.org/wiki/Bunk%27Art" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [23.3600, 41.3300] },
+      "properties": { "id": "gr-rupel", "name": "Forte Rupel", "alt_names": ["Οχυρό Ρούπελ"], "place": "Sidirokastro, Macedonia centrale", "country": "GR", "builder": "Esercito greco", "category": "fortification", "period": "interwar", "built": "1936–1940", "function": "Forte della Linea Metaxas", "dimensions": "", "status": "museum", "access": "Visitabile", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Fort Roupel", "url": "https://en.wikipedia.org/wiki/Fort_Roupel" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [25.0450, 57.2317] },
+      "properties": { "id": "lv-ligatne", "name": "Bunker sovietico di Līgatne", "alt_names": [], "place": "Līgatne", "country": "LV", "builder": "Unione Sovietica", "category": "underground", "period": "cold_war", "built": "1968–1982", "function": "Rifugio segreto per il governo della RSS Lettone", "dimensions": "", "status": "museum", "access": "Visite guidate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Līgatne", "url": "https://en.wikipedia.org/wiki/L%C4%ABgatne" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [37.6497, 55.7417] },
+      "properties": { "id": "ru-bunker-42", "name": "Bunker-42", "alt_names": ["GO-42", "Bunker Taganskij"], "place": "Taganka, Mosca", "country": "RU", "builder": "Unione Sovietica", "category": "underground", "period": "cold_war", "built": "1951–1956", "function": "Posto di comando dell'aviazione strategica", "dimensions": "Circa 65 m di profondità", "status": "museum", "access": "Museo", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Bunker-42", "url": "https://en.wikipedia.org/wiki/Bunker-42" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [14.5124, 35.8955] },
+      "properties": { "id": "mt-lascaris", "name": "Lascaris War Rooms", "alt_names": [], "place": "La Valletta", "country": "MT", "builder": "Regno Unito", "category": "underground", "period": "ww2", "built": "1940–1943", "function": "Centro di comando della difesa di Malta", "dimensions": "", "status": "museum", "access": "Museo", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Lascaris War Rooms", "url": "https://en.wikipedia.org/wiki/Lascaris_War_Rooms" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-76.0472, 45.3519] },
+      "properties": { "id": "ca-diefenbunker", "name": "Diefenbunker", "alt_names": ["CFS Carp"], "place": "Carp, Ontario", "country": "CA", "builder": "Governo canadese", "category": "underground", "period": "cold_war", "built": "1959–1961", "function": "Sede di emergenza del governo federale in caso di attacco nucleare", "dimensions": "Quattro piani sotterranei", "status": "museum", "access": "Museo della Guerra fredda", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Diefenbunker", "url": "https://en.wikipedia.org/wiki/Diefenbunker" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-80.3083, 37.7854] },
+      "properties": { "id": "us-greenbrier", "name": "Bunker del Greenbrier", "alt_names": ["Project Greek Island"], "place": "White Sulphur Springs, Virginia Occidentale", "country": "US", "builder": "Governo degli Stati Uniti", "category": "underground", "period": "cold_war", "built": "1958–1961", "function": "Rifugio di emergenza per il Congresso", "dimensions": "", "status": "museum", "access": "Visite guidate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Project Greek Island", "url": "https://en.wikipedia.org/wiki/Project_Greek_Island" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-110.9989, 31.9028] },
+      "properties": { "id": "us-titan-missile-museum", "name": "Titan Missile Museum", "alt_names": ["Complex 571-7"], "place": "Sahuarita, Arizona", "country": "US", "builder": "US Air Force", "category": "military", "period": "cold_war", "built": "1962–1963", "function": "Silo per missile balistico intercontinentale Titan II", "dimensions": "", "status": "museum", "access": "Museo", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Titan Missile Museum", "url": "https://en.wikipedia.org/wiki/Titan_Missile_Museum" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [127.6669, 26.1856] },
+      "properties": { "id": "jp-okinawa-navy-hq", "name": "Ex quartier generale sotterraneo della Marina", "alt_names": ["旧海軍司令部壕"], "place": "Tomigusuku, Okinawa", "country": "JP", "builder": "Marina imperiale giapponese", "category": "underground", "period": "ww2", "built": "1944", "function": "Comando sotterraneo durante la battaglia di Okinawa", "dimensions": "", "status": "museum", "access": "Museo", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Japanese Navy Underground Headquarters", "url": "https://en.wikipedia.org/wiki/Japanese_Navy_Underground_Headquarters" }] } },
+
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-5.3460, 36.1440] },
+      "properties": { "id": "gi-wwii-tunnels", "name": "Gallerie della Seconda guerra mondiale di Gibilterra", "alt_names": ["Gibraltar WWII Tunnels"], "place": "Rocca di Gibilterra", "country": "GI", "builder": "Regno Unito", "category": "other", "period": "ww2", "built": "1939–1944", "function": "Gallerie militari, depositi e ospedale nella Rocca", "dimensions": "", "status": "museum", "access": "Visite guidate", "visibility": "public", "reliability": "unverified",
+        "sources": [{ "title": "Wikipedia – Tunnels of Gibraltar", "url": "https://en.wikipedia.org/wiki/Tunnels_of_Gibraltar" }] } }
+  ]
+}

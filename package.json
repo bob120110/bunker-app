@@ -1,0 +1,6 @@
+{
+  "name": "bunker-atlas",
+  "private": true,
+  "type": "module",
+  "scripts": { "validate": "node tools/validate.mjs" }
+}

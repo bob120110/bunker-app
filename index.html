@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bunker Atlas</title>
+  <meta name="description" content="Atlante mondiale aperto di bunker, rifugi e fortificazioni storiche.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Cpath d=%22M3 26h26v3H3zM6 26V15a10 10 0 0 1 20 0v11z%22 fill=%22%237d6608%22/%3E%3Crect x=%2211%22 y=%2216%22 width=%2210%22 height=%223%22 fill=%22%231c2833%22/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <button id="toggle-sidebar" class="icon-btn" aria-controls="sidebar" aria-expanded="true" title="Filtri">☰</button>
+    <h1>Bunker Atlas</h1>
+    <input id="search" type="search" placeholder="Cerca per nome o località…" autocomplete="off" aria-label="Cerca">
+  </header>
+
+  <main class="layout">
+    <aside id="sidebar" class="sidebar" aria-label="Filtri e risultati">
+      <section>
+        <h2>Tipologia</h2>
+        <div id="filter-category" class="checks"></div>
+      </section>
+      <section class="row">
+        <label>Periodo
+          <select id="filter-period"><option value="">Tutti</option></select>
+        </label>
+        <label>Stato
+          <select id="filter-status"><option value="">Tutti</option></select>
+        </label>
+      </section>
+      <section>
+        <div class="results-head">
+          <h2><span id="result-count">0</span> strutture</h2>
+          <button id="fit-results" class="link-btn">Inquadra</button>
+        </div>
+        <ul id="results" class="results"></ul>
+      </section>
+    </aside>
+
+    <div id="map" class="map" role="region" aria-label="Mappa"></div>
+
+    <aside id="detail" class="detail" hidden aria-live="polite">
+      <button id="close-detail" class="icon-btn close" title="Chiudi">✕</button>
+      <div id="detail-body"></div>
+    </aside>
+  </main>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
