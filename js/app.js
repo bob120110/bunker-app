@@ -75,7 +75,11 @@ const intersects = (a, b) => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3
 async function loadVisibleLayers({ all = false } = {}) {
   const b = map.getBounds();
   const view = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
-  const todo = state.layers.filter((l) => !state.loaded.has(l.id) && (all || !l.bbox || intersects(l.bbox, view)));
+  const covers = (l) => {
+    const boxes = l.bboxes || (l.bbox ? [l.bbox] : null);
+    return !boxes || boxes.some((bb) => intersects(bb, view));
+  };
+  const todo = state.layers.filter((l) => !state.loaded.has(l.id) && (all || covers(l)));
   if (!todo.length) return false;
   await Promise.all(todo.map(loadLayer));
   refresh();
@@ -234,7 +238,12 @@ function buildFilters() {
   fill($('#filter-status'), Object.fromEntries(Object.entries(STATUSES).filter(([k]) => k !== 'active')));
   $('#filter-period').addEventListener('change', (e) => { state.period = e.target.value; refresh(); });
   $('#filter-status').addEventListener('change', (e) => { state.status = e.target.value; refresh(); });
-  $('#search').addEventListener('input', (e) => { state.query = e.target.value; refresh(); });
+  // Debounced: with thousands of sites, refiltering on every keystroke feels sluggish.
+  let searchTimer;
+  $('#search').addEventListener('input', (e) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { state.query = e.target.value; refresh(); }, 250);
+  });
 }
 
 // The list shows what is inside the current map view (named sites first),

@@ -26,6 +26,7 @@ const UA = 'BunkerAtlasImport/0.1 (open data project)';
 const ENDPOINTS = [
   'https://overpass-api.de/api/interpreter',
   'https://overpass.kumi.systems/api/interpreter',
+  'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
 ];
 
 // ---------- args ----------
@@ -73,8 +74,16 @@ async function overpass(query) {
           body: 'data=' + encodeURIComponent(query),
         });
         const text = await res.text();
-        if (res.ok) return JSON.parse(text);
-        console.warn(`  ${url}: HTTP ${res.status}`);
+        if (!res.ok) { console.warn(`  ${url}: HTTP ${res.status}`); continue; }
+        const json = JSON.parse(text);
+        // Overpass answers HTTP 200 even when the query died half-way; the
+        // error is only in "remark". A partial answer must never be imported.
+        if (/error|timed out|out of memory/i.test(json.remark || '')) {
+          console.warn(`  ${url}: ${json.remark.slice(0, 120)}`);
+          continue;
+        }
+        if (!json.elements?.length) { console.warn(`  ${url}: empty answer`); continue; }
+        return json;
       } catch (err) {
         console.warn(`  ${url}: ${err.message}`);
       }
@@ -123,7 +132,7 @@ const UNNAMED = {
 };
 
 // Names that are really a date or a generic word ("14-18", "Entrata", "Bunker").
-const JUNK_NAME = /^(\d{2,4}\s*-\s*\d{2,4}|entrata|entr[ée]e|ingresso|eingang|bunker|fortino|casamatta|postazione)$/i;
+const JUNK_NAME = /^(\d{2,4}\s*-\s*\d{2,4}|entrata|entr[ée]e|ingresso|eingang|vhod|bunker|bunkr|fortino|casamatta|postazione|blockhaus|casemate|abri|unterstand|bunker allemand|deutscher bunker)$/i;
 const cleanName = (n) => (n && !JUNK_NAME.test(n.trim()) ? n.trim() : '');
 
 const lifecycle = (t, key) => t[key] ?? t[`disused:${key}`] ?? t[`abandoned:${key}`];
@@ -144,9 +153,10 @@ function period(t) {
   if (lifecycle(t, 'bunker_type') === '14-18') return 'ww1';
   // Mappers often put the period in the name ("14-18", "Bunker WWI", "… Seconda Guerra Mondiale").
   const name = t.name || '';
-  if (/\bwwii\b|\bww2\b|seconda guerra/i.test(name)) return 'ww2';
-  if (/\b(19)?1[45]\s*-\s*(19)?18\b|\bwwi\b|\bww1\b|grande guerra|prima guerra/i.test(name)) return 'ww1';
-  if (/guerra fredda/i.test(name)) return 'cold_war';
+  if (/\bwwii\b|\bww2\b|seconda guerra|seconde guerre|zweite[rn]? weltkrieg|druga svetovna|\b(19)?39\s*-\s*(19)?45\b|atlantikwall|mur de l.atlantique|regelbau|\bwn\s?\d|\bstp\s?\d/i.test(name)) return 'ww2';
+  if (/\b(19)?1[45]\s*-\s*(19)?18\b|\bwwi\b|\bww1\b|grande guerra|prima guerra|grande guerre|premi[eè]re guerre|erste[rn]? weltkrieg|prva svetovna|soška fronta|isonzo/i.test(name)) return 'ww1';
+  if (/guerra fredda|guerre froide|kalte[rn]? krieg|hladna vojna/i.test(name)) return 'cold_war';
+  if (/maginot|vallo alpino|ligne alpine|rupnik/i.test(name)) return 'interwar';
   const m = String(t.start_date || t.construction_date || hp).match(/\b(1[89]\d\d|20\d\d)\b/);
   if (m) {
     const y = +m[1];
@@ -156,7 +166,6 @@ function period(t) {
     if (y >= 1946 && y <= 1991) return 'cold_war';
     return 'other';
   }
-  if (/vallo alpino/i.test(t.name || '')) return 'interwar';
   return 'unknown';
 }
 
@@ -184,6 +193,10 @@ function sources(e, t) {
   if (/^Q\d+$/.test(t.wikidata || '')) out.push({ title: `Wikidata – ${t.wikidata}`, url: `https://www.wikidata.org/wiki/${t.wikidata}` });
   return out;
 }
+
+const COUNTRY_NAME = (() => {
+  try { return new Intl.DisplayNames(['it'], { type: 'region' }).of(cc) || cc; } catch { return cc; }
+})();
 
 const round = (n, d) => Math.round(n * 10 ** d) / 10 ** d;
 
@@ -226,7 +239,16 @@ const nearest = placeIndex(places);
 const curated = JSON.parse(readFileSync(join(ROOT, 'data/bunkers.geojson'), 'utf8')).features;
 const nearCurated = (c) => curated.some((f) => metres(c, f.geometry.coordinates) < 150);
 
-const stats = { total: 0, noCoords: 0, nearCurated: 0, approximate: 0 };
+// Objects on a border are returned for both countries: keep the first copy.
+const ownFile = `data/osm/${cc.toLowerCase()}.geojson`;
+const otherLayers = existsSync(join(ROOT, 'data/index.json'))
+  ? JSON.parse(readFileSync(join(ROOT, 'data/index.json'), 'utf8')).layers.filter((l) => l.id !== 'curated' && l.file !== ownFile)
+  : [];
+const inOtherCountry = new Set(otherLayers.flatMap((l) => {
+  try { return JSON.parse(readFileSync(join(ROOT, l.file), 'utf8')).features.map((f) => f.properties.id); } catch { return []; }
+}));
+
+const stats = { total: 0, noCoords: 0, nearCurated: 0, approximate: 0, otherCountry: 0 };
 const seen = new Set();
 const features = [];
 
@@ -235,6 +257,7 @@ for (const e of raw.elements) {
   const id = `osm-${e.type[0]}${e.id}`;
   if (seen.has(id)) continue;
   seen.add(id);
+  if (inOtherCountry.has(id)) { stats.otherCountry++; continue; }
   stats.total++;
 
   const t = e.tags || {};
@@ -274,12 +297,16 @@ for (const e of raw.elements) {
     origin: 'osm',
     sources: sources(e, t),
   };
-  if (!props.place) props.place = { IT: 'Italia' }[cc] || cc;
+  if (!props.place) props.place = COUNTRY_NAME;
   for (const k of Object.keys(props)) if (props[k] === undefined) delete props[k];
   features.push({ type: 'Feature', geometry: { type: 'Point', coordinates: coords }, properties: props });
 }
 
 features.sort((a, b) => a.properties.id.localeCompare(b.properties.id));
+if (!features.length) {
+  console.error(`${cc}: no bunkers found — not writing anything (Overpass problem?)`);
+  process.exit(1);
+}
 
 // ---------- write ----------
 
@@ -289,10 +316,18 @@ mkdirSync(join(ROOT, 'data/osm'), { recursive: true });
 writeFileSync(join(ROOT, outRel),
   '{"type":"FeatureCollection","features":[\n' + features.map((f) => JSON.stringify(f)).join(',\n') + '\n]}\n');
 
-const bbox = features.reduce((b, f) => {
+// Areas the layer covers, as one box per occupied 5°×5° cell. A single bbox
+// would span half the globe for countries with overseas territories (France),
+// and then the app would download the file wherever the map is.
+const CELL = 5;
+const cells = new Set(features.map((f) => {
   const [x, y] = f.geometry.coordinates;
-  return [Math.min(b[0], x), Math.min(b[1], y), Math.max(b[2], x), Math.max(b[3], y)];
-}, [180, 90, -180, -90]).map((n) => round(n, 3));
+  return `${Math.floor(x / CELL)}:${Math.floor(y / CELL)}`;
+}));
+const bboxes = [...cells].sort().map((k) => {
+  const [cx, cy] = k.split(':').map(Number);
+  return [cx * CELL, cy * CELL, (cx + 1) * CELL, (cy + 1) * CELL];
+});
 
 const indexPath = join(ROOT, 'data/index.json');
 const index = existsSync(indexPath)
@@ -302,7 +337,7 @@ index.layers = index.layers.filter((l) => l.id !== `osm-${cc.toLowerCase()}`);
 index.layers.push({
   id: `osm-${cc.toLowerCase()}`,
   file: outRel,
-  bbox,
+  bboxes,
   count: features.length,
   attribution: '© OpenStreetMap contributors (ODbL)',
   updated: (raw.osm3s?.timestamp_osm_base || new Date().toISOString()).slice(0, 10),
@@ -312,7 +347,7 @@ writeFileSync(indexPath, JSON.stringify(index, null, 2) + '\n');
 const by = (k) => Object.entries(features.reduce((m, f) => ((m[f.properties[k]] = (m[f.properties[k]] || 0) + 1), m), {}))
   .sort((a, b) => b[1] - a[1]).map(([v, n]) => `${v} ${n}`).join(', ');
 console.log(`${cc}: ${features.length} bunkers written to ${outRel}`);
-console.log(`  skipped: ${stats.noCoords} without coordinates, ${stats.nearCurated} duplicates of curated sites`);
+console.log(`  skipped: ${stats.noCoords} without coordinates, ${stats.nearCurated} duplicates of curated sites, ${stats.otherCountry} already in another country's file`);
 console.log(`  approximate (private access): ${stats.approximate}`);
 console.log(`  named: ${features.filter((f) => !f.properties.unnamed).length}`);
 console.log(`  category: ${by('category')}`);

@@ -7,14 +7,208 @@
     {
       "id": "osm-it",
       "file": "data/osm/it.geojson",
-      "bbox": [
-        6.644,
-        35.493,
-        18.512,
-        47.01
+      "bboxes": [
+        [
+          5,
+          35,
+          10,
+          40
+        ],
+        [
+          5,
+          40,
+          10,
+          45
+        ],
+        [
+          5,
+          45,
+          10,
+          50
+        ],
+        [
+          10,
+          35,
+          15,
+          40
+        ],
+        [
+          10,
+          40,
+          15,
+          45
+        ],
+        [
+          10,
+          45,
+          15,
+          50
+        ],
+        [
+          15,
+          35,
+          20,
+          40
+        ],
+        [
+          15,
+          40,
+          20,
+          45
+        ]
       ],
       "count": 3432,
-      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "attribution": "\u00a9 OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-12"
+    },
+    {
+      "id": "osm-si",
+      "file": "data/osm/si.geojson",
+      "bboxes": [
+        [
+          10,
+          45,
+          15,
+          50
+        ],
+        [
+          15,
+          45,
+          20,
+          50
+        ]
+      ],
+      "count": 396,
+      "attribution": "\u00a9 OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-12"
+    },
+    {
+      "id": "osm-fr",
+      "file": "data/osm/fr.geojson",
+      "bboxes": [
+        [
+          -65,
+          15,
+          -60,
+          20
+        ],
+        [
+          -5,
+          40,
+          0,
+          45
+        ],
+        [
+          -5,
+          45,
+          0,
+          50
+        ],
+        [
+          -10,
+          45,
+          -5,
+          50
+        ],
+        [
+          -155,
+          -20,
+          -150,
+          -15
+        ],
+        [
+          0,
+          50,
+          5,
+          55
+        ],
+        [
+          0,
+          40,
+          5,
+          45
+        ],
+        [
+          0,
+          45,
+          5,
+          50
+        ],
+        [
+          55,
+          -25,
+          60,
+          -20
+        ],
+        [
+          75,
+          -40,
+          80,
+          -35
+        ],
+        [
+          5,
+          40,
+          10,
+          45
+        ],
+        [
+          5,
+          45,
+          10,
+          50
+        ]
+      ],
+      "count": 10458,
+      "attribution": "\u00a9 OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-12"
+    },
+    {
+      "id": "osm-ch",
+      "file": "data/osm/ch.geojson",
+      "bboxes": [
+        [
+          5,
+          45,
+          10,
+          50
+        ],
+        [
+          10,
+          45,
+          15,
+          50
+        ]
+      ],
+      "count": 1542,
+      "attribution": "\u00a9 OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-12"
+    },
+    {
+      "id": "osm-at",
+      "file": "data/osm/at.geojson",
+      "bboxes": [
+        [
+          5,
+          45,
+          10,
+          50
+        ],
+        [
+          10,
+          45,
+          15,
+          50
+        ],
+        [
+          15,
+          45,
+          20,
+          50
+        ]
+      ],
+      "count": 379,
+      "attribution": "\u00a9 OpenStreetMap contributors (ODbL)",
       "updated": "2026-11-12"
     }
   ]

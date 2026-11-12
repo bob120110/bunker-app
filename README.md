@@ -58,6 +58,8 @@ This downloads every bunker-type object in the country from the Overpass API. Th
 - maps OSM tags onto our categories, periods and statuses
 - links every entry back to its OSM object (and to Wikipedia or Wikidata if tagged)
 - skips anything within 150 m of a curated site
+- skips objects on a border that another country's file already has
+- refuses to write anything if Overpass returns an error, a partial answer or no results
 - sets reliability to `partial` ("documentato ma incompleto")
 
 If the public Overpass server is busy, save the query results yourself and pass them in with `--bunkers file.json --places file.json`.
@@ -76,6 +78,6 @@ The 29 sample entries are well-known public sites, written from general knowledg
 
 ## Roadmap
 1. Static map with sample data (this version).
-2. A bigger dataset: OpenStreetMap import (Italy done; more countries next) and a catalogue of other sources.
+2. A bigger dataset: OpenStreetMap import (done: Italy, France, Switzerland, Austria, Slovenia; more countries next) and a catalogue of other sources.
 3. A backend for submissions with review, edit history and photo uploads. This needs hosting beyond Aruba static/PHP, or a PHP + MariaDB version of the API.
 4. Downloadable public datasets.
