@@ -1,4 +1,6 @@
-import { CATEGORIES, PERIODS, STATUSES, RELIABILITY, APPROX_GRID, BASEMAPS } from './config.js';
+import {
+  CATEGORIES, PERIODS, STATUSES, RELIABILITY, APPROX_GRID, BASEMAPS, STREET_STYLE, MAP_FONT, FALLBACK_STREETS,
+} from './config.js';
 
 const INDEX_URL = 'data/index.json';
 const LIST_LIMIT = 200;
@@ -100,14 +102,33 @@ function categoryColorExpr() {
 
 // ---------- map ----------
 
-function buildStyle() {
-  const sources = {};
-  const layers = [];
-  for (const [key, b] of Object.entries(BASEMAPS)) {
-    sources[`base-${key}`] = { type: 'raster', tiles: b.tiles, tileSize: 256, maxzoom: b.maxzoom, attribution: b.attribution };
-    layers.push({ id: `base-${key}`, type: 'raster', source: `base-${key}`, layout: { visibility: key === 'streets' ? 'visible' : 'none' } });
+// Street map = OpenFreeMap's vector style. Topographic/satellite are raster
+// layers appended on top of it, hidden until chosen. If the style can't be
+// fetched, fall back to plain OSM raster tiles so the map still works.
+async function buildStyle() {
+  let style;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(STREET_STYLE, { signal: ctrl.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    style = await res.json();
+  } catch (err) {
+    console.warn('Mappa stradale non disponibile, uso il ripiego raster:', err);
+    style = {
+      version: 8,
+      glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
+      sources: { 'base-streets': { type: 'raster', tileSize: 256, ...FALLBACK_STREETS } },
+      layers: [{ id: 'base-streets', type: 'raster', source: 'base-streets' }],
+    };
   }
-  return { version: 8, glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf', sources, layers };
+  for (const [key, b] of Object.entries(BASEMAPS)) {
+    if (!b.tiles) continue;
+    style.sources[`base-${key}`] = { type: 'raster', tiles: b.tiles, tileSize: 256, maxzoom: b.maxzoom, attribution: b.attribution };
+    style.layers.push({ id: `base-${key}`, type: 'raster', source: `base-${key}`, layout: { visibility: 'none' } });
+  }
+  return style;
 }
 
 class BasemapControl {
@@ -127,8 +148,9 @@ class BasemapControl {
     return this.el;
   }
   select(key) {
-    for (const k of Object.keys(BASEMAPS)) {
-      this.map.setLayoutProperty(`base-${k}`, 'visibility', k === key ? 'visible' : 'none');
+    // The street map is always underneath; the others are overlays.
+    for (const [k, b] of Object.entries(BASEMAPS)) {
+      if (b.tiles) this.map.setLayoutProperty(`base-${k}`, 'visibility', k === key ? 'visible' : 'none');
     }
     this.el.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.key === key));
   }
@@ -158,7 +180,7 @@ function addBunkerLayers(map, attribution) {
   });
   map.addLayer({
     id: 'cluster-count', type: 'symbol', source: 'bunkers', filter: ['has', 'point_count'],
-    layout: { 'text-field': ['get', 'point_count_abbreviated'], 'text-font': ['Open Sans Semibold'], 'text-size': 12 },
+    layout: { 'text-field': ['get', 'point_count_abbreviated'], 'text-font': [MAP_FONT], 'text-size': 12 },
     paint: { 'text-color': '#fff' },
   });
   // Halo for entries whose position is deliberately blurred.
@@ -332,7 +354,7 @@ async function main() {
 
   map = new maplibregl.Map({
     container: 'map',
-    style: buildStyle(),
+    style: await buildStyle(),
     center: [12, 45],
     zoom: 3,
     attributionControl: { compact: true },

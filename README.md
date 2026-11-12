@@ -5,7 +5,7 @@ An open world map of bunkers, air-raid shelters and fortifications, built from t
 This is the **static first version**: a map with no backend. It's plain HTML, CSS and JS with no build step, so it can be uploaded to any static host, including the Aruba plan that runs misere.it.
 
 ## What it does
-- A world map built with MapLibre GL JS. Base maps: OpenStreetMap streets, OpenTopoMap terrain and Esri satellite.
+- A world map built with MapLibre GL JS. Base maps: OpenFreeMap streets (vector, free, no API key), OpenTopoMap terrain and Esri satellite. If OpenFreeMap is unreachable, the app falls back to openstreetmap.org tiles.
 - One colour per category. Nearby points group into clusters until you zoom in.
 - Filters by category, period and status, plus a text search on name, alternate names, place and country.
 - A detail card for each structure, with a reliability label and sources.
@@ -26,7 +26,7 @@ The site can be installed on a phone or computer as an app.
 - **Android / Chrome / Edge:** tap the **Installa** button in the top bar, or use "Install app" in the browser menu.
 - **iPhone / iPad (Safari):** tap **Share**, then **Add to Home Screen**. The app shows a one-time hint about this.
 
-Offline, the app still opens, with the bunker data and any map areas already viewed (up to about 1,500 map tiles are kept). `sw.js` handles this.
+Offline, the app still opens, with the bunker data and any map areas already viewed (up to about 3,000 map tiles are kept). `sw.js` handles this.
 
 **On every deploy, bump `VERSION` in `sw.js`.** Otherwise installed copies keep serving the old files. Installing needs HTTPS (or `localhost`). `.htaccess` sets the right file type for the manifest and stops browsers caching `sw.js`.
 

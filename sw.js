@@ -4,14 +4,16 @@
 //   cache-first. Bump VERSION on every deploy so users get the new files.
 // - Bunker data (everything under data/): network-first, falls back to the
 //   cached copy when offline. Country files are cached once they've been loaded.
-// - Map tiles and fonts: cached as they are viewed (cache-first), capped so the
-//   cache can't grow forever. Areas you've looked at keep working offline.
+// - Map tiles, fonts and icons: cached as they are viewed (cache-first), capped
+//   so the cache can't grow forever. Areas you've looked at keep working offline.
+// - OpenFreeMap style/TileJSON: network-first. They point to versioned tile
+//   URLs that change over time, so a stale cached copy would break the map.
 
-const VERSION = 'v3';
+const VERSION = 'v4';
 const SHELL = `shell-${VERSION}`;
 const DATA = 'data';
 const TILES = 'tiles';
-const MAX_TILES = 1500;
+const MAX_TILES = 3000; // vector tiles are small; ~3000 covers several regions
 
 const SHELL_FILES = [
   './',
@@ -31,11 +33,14 @@ const SHELL_FILES = [
 const DATA_FILES = ['data/index.json', 'data/bunkers.geojson'];
 
 const TILE_HOSTS = [
+  'tiles.openfreemap.org',
   'tile.openstreetmap.org',
   'tile.opentopomap.org',
   'server.arcgisonline.com',
-  'demotiles.maplibre.org',
 ];
+// Map files that describe *where* the tiles are, not tiles themselves.
+const isMapIndex = (url) => url.hostname === 'tiles.openfreemap.org'
+  && (url.pathname.startsWith('/styles/') || /^\/planet\/?$/.test(url.pathname));
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
@@ -60,6 +65,8 @@ self.addEventListener('fetch', (event) => {
 
   if (url.origin === location.origin && url.pathname.includes('/data/')) {
     event.respondWith(networkFirst(req, DATA));
+  } else if (isMapIndex(url)) {
+    event.respondWith(networkFirst(req, TILES));
   } else if (TILE_HOSTS.some((h) => url.hostname === h || url.hostname.endsWith('.' + h))) {
     event.respondWith(tileCacheFirst(req, event));
   } else if (req.mode === 'navigate') {

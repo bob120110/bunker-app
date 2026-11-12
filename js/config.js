@@ -35,13 +35,13 @@ export const RELIABILITY = {
 // Grid size (degrees) used to blur "approximate" entries. ~5 km.
 export const APPROX_GRID = 0.05;
 
+// Street map: OpenFreeMap vector tiles (free, no API key, allowed for apps).
+// Topographic and satellite are raster overlays drawn on top when selected.
+export const STREET_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
+export const MAP_FONT = 'Noto Sans Bold'; // must exist in the street style's glyphs
+
 export const BASEMAPS = {
-  streets: {
-    label: 'Stradale',
-    tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-    maxzoom: 19,
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  },
+  streets: { label: 'Stradale' },
   topo: {
     label: 'Topografica',
     tiles: ['https://a.tile.opentopomap.org/{z}/{x}/{y}.png'],
@@ -54,4 +54,11 @@ export const BASEMAPS = {
     maxzoom: 19,
     attribution: 'Immagini © Esri, Maxar, Earthstar Geographics',
   },
+};
+
+// Used only if the OpenFreeMap style can't be loaded (e.g. first visit offline).
+export const FALLBACK_STREETS = {
+  tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+  maxzoom: 19,
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 };
