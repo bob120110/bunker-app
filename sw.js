@@ -2,11 +2,12 @@
 //
 // - App shell (HTML/CSS/JS/icons + MapLibre from the CDN): precached, served
 //   cache-first. Bump VERSION on every deploy so users get the new files.
-// - Bunker data: network-first, falls back to the cached copy when offline.
+// - Bunker data (everything under data/): network-first, falls back to the
+//   cached copy when offline. Country files are cached once they've been loaded.
 // - Map tiles and fonts: cached as they are viewed (cache-first), capped so the
 //   cache can't grow forever. Areas you've looked at keep working offline.
 
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL = `shell-${VERSION}`;
 const DATA = 'data';
 const TILES = 'tiles';
@@ -27,7 +28,7 @@ const SHELL_FILES = [
   'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js',
   'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css',
 ];
-const DATA_FILES = ['data/bunkers.geojson'];
+const DATA_FILES = ['data/index.json', 'data/bunkers.geojson'];
 
 const TILE_HOSTS = [
   'tile.openstreetmap.org',
@@ -57,7 +58,7 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  if (url.origin === location.origin && url.pathname.endsWith('.geojson')) {
+  if (url.origin === location.origin && url.pathname.includes('/data/')) {
     event.respondWith(networkFirst(req, DATA));
   } else if (TILE_HOSTS.some((h) => url.hostname === h || url.hostname.endsWith('.' + h))) {
     event.respondWith(tileCacheFirst(req, event));

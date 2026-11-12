@@ -1,0 +1,21 @@
+{
+  "layers": [
+    {
+      "id": "curated",
+      "file": "data/bunkers.geojson"
+    },
+    {
+      "id": "osm-it",
+      "file": "data/osm/it.geojson",
+      "bbox": [
+        6.644,
+        35.493,
+        18.512,
+        47.01
+      ],
+      "count": 3432,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-12"
+    }
+  ]
+}

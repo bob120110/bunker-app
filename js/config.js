@@ -14,6 +14,7 @@ export const PERIODS = {
   ww2: 'Seconda guerra mondiale',
   cold_war: 'Guerra fredda',
   other: 'Altro',
+  unknown: 'Non specificato',
 };
 
 export const STATUSES = {
@@ -22,6 +23,7 @@ export const STATUSES = {
   reconverted: 'Riconvertito',
   demolished: 'Demolito',
   active: 'Attivo',
+  unknown: 'Non specificato',
 };
 
 export const RELIABILITY = {

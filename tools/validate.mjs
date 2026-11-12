@@ -1,21 +1,29 @@
 #!/usr/bin/env node
-// Validates data/bunkers.geojson before it is published.
-// Usage: node tools/validate.mjs [path]
+// Validates the published data before it goes online.
+// Usage: node tools/validate.mjs            (every layer in data/index.json)
+//        node tools/validate.mjs <file>     (a single GeoJSON file)
 import { readFileSync } from 'node:fs';
 import { CATEGORIES, PERIODS, STATUSES, RELIABILITY } from '../js/config.js';
 
-const path = process.argv[2] || new URL('../data/bunkers.geojson', import.meta.url);
-const fc = JSON.parse(readFileSync(path, 'utf8'));
+const ROOT = new URL('../', import.meta.url);
+const files = process.argv[2]
+  ? [process.argv[2]]
+  : JSON.parse(readFileSync(new URL('data/index.json', ROOT), 'utf8')).layers.map((l) => new URL(l.file, ROOT));
 const errors = [];
+let total = 0;
 const ids = new Set();
 const VISIBILITY = ['public', 'approximate', 'hidden'];
 const REQUIRED = ['id', 'name', 'place', 'country', 'category', 'period', 'status', 'visibility', 'reliability'];
 
 const decimals = (n) => (String(n).split('.')[1] || '').length;
 
+for (const file of files) {
+const fc = JSON.parse(readFileSync(file, 'utf8'));
+const name = String(file).split('/').slice(-2).join('/');
+total += fc.features.length;
 fc.features.forEach((f, i) => {
   const p = f.properties || {};
-  const where = `#${i} (${p.id || 'no id'})`;
+  const where = `${name} #${i} (${p.id || 'no id'})`;
   const err = (m) => errors.push(`${where}: ${m}`);
 
   for (const k of REQUIRED) if (!p[k]) err(`missing "${k}"`);
@@ -44,9 +52,11 @@ fc.features.forEach((f, i) => {
   if (!srcs.length) err('at least one source is required');
   srcs.forEach((s) => { if (s.url && !/^https?:\/\//.test(s.url)) err(`invalid source url ${s.url}`); });
 });
+}
 
 if (errors.length) {
-  console.error(`✗ ${errors.length} problem(s):\n  ${errors.join('\n  ')}`);
+  const shown = errors.slice(0, 50);
+  console.error(`✗ ${errors.length} problem(s):\n  ${shown.join('\n  ')}${errors.length > 50 ? '\n  …' : ''}`);
   process.exit(1);
 }
-console.log(`✓ ${fc.features.length} entries OK`);
+console.log(`✓ ${total} entries OK in ${files.length} file(s)`);

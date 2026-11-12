@@ -33,21 +33,42 @@ Offline, the app still opens, with the bunker data and any map areas already vie
 To rebuild the PNG icons after changing `icons/icon.svg`, re-render it at 192, 512 and 180 (Apple) pixels, plus a 512 "maskable" version with the artwork scaled to about 72%.
 
 ## Data
-All data lives in `data/bunkers.geojson`, one Point feature per structure. Run the validator after every edit:
+The data is split into layers listed in `data/index.json`:
+- `data/bunkers.geojson`: the curated list, written by hand.
+- `data/osm/<country>.geojson`: bunkers imported from OpenStreetMap, one file per country. The app only downloads a country file when the map shows that country.
+
+Run the validator after every change. It checks every layer:
 
 ```bash
 node tools/validate.mjs
 ```
 
-The validator checks required fields and allowed values, and that every entry has at least one source. It also enforces the safety rules. In this static version the raw file can be downloaded by anyone, so:
-- `hidden` entries and active installations must not be in the file at all.
+The validator checks required fields and allowed values, and that every entry has at least one source. It also enforces the safety rules. Anyone can download the raw files, so:
+- `hidden` entries and active installations must not be in the files at all.
 - `approximate` entries must be **stored** with at most 2 decimal places. Blurring the position only in the browser would not protect anything.
+
+### Importing from OpenStreetMap
+```bash
+node tools/import-osm.mjs IT
+```
+This downloads every bunker-type object in the country from the Overpass API. That means `military=bunker`, `building=bunker`, `historic=bunker`, and disused or abandoned bunkers. It then:
+- **drops anything inside a `landuse=military` area**, which is likely still in use
+- stores bunkers with `access=private/no` only approximately
+- names each bunker after the nearest town, and replaces junk names such as "14-18" or "Entrata"
+- maps OSM tags onto our categories, periods and statuses
+- links every entry back to its OSM object (and to Wikipedia or Wikidata if tagged)
+- skips anything within 150 m of a curated site
+- sets reliability to `partial` ("documentato ma incompleto")
+
+If the public Overpass server is busy, save the query results yourself and pass them in with `--bunkers file.json --places file.json`.
+
+**License:** imported data is © OpenStreetMap contributors under the ODbL. The map shows that attribution, and the data files must stay open under the same license.
 
 | Field | Values |
 |---|---|
 | `category` | `military`, `civil_shelter`, `fortification`, `underground`, `other` |
-| `period` | `ww1`, `interwar`, `ww2`, `cold_war`, `other` |
-| `status` | `museum`, `abandoned`, `reconverted`, `demolished` (`active` is not allowed) |
+| `period` | `ww1`, `interwar`, `ww2`, `cold_war`, `other`, `unknown` |
+| `status` | `museum`, `abandoned`, `reconverted`, `demolished`, `unknown` (`active` is not allowed) |
 | `visibility` | `public`, `approximate` |
 | `reliability` | `verified`, `partial`, `unverified` |
 
@@ -55,6 +76,6 @@ The 29 sample entries are well-known public sites, written from general knowledg
 
 ## Roadmap
 1. Static map with sample data (this version).
-2. A bigger dataset: a catalogue of sources and an import from OpenStreetMap (`military=bunker`, `building=bunker`).
+2. A bigger dataset: OpenStreetMap import (Italy done; more countries next) and a catalogue of other sources.
 3. A backend for submissions with review, edit history and photo uploads. This needs hosting beyond Aruba static/PHP, or a PHP + MariaDB version of the API.
 4. Downloadable public datasets.

@@ -1,10 +1,14 @@
 import { CATEGORIES, PERIODS, STATUSES, RELIABILITY, APPROX_GRID, BASEMAPS } from './config.js';
 
-const DATA_URL = 'data/bunkers.geojson';
+const INDEX_URL = 'data/index.json';
+const LIST_LIMIT = 200;
 const $ = (sel) => document.querySelector(sel);
 
 const state = {
-  all: [],                                   // prepared features
+  all: [],                                   // prepared features, all loaded layers
+  byId: new Map(),
+  layers: [],                                // entries of data/index.json
+  loaded: new Set(),                         // layer ids already fetched or loading
   categories: new Set(Object.keys(CATEGORIES)),
   period: '',
   status: '',
@@ -46,10 +50,44 @@ function filtered() {
   });
 }
 
+// Data is split into layers (data/index.json): the curated list plus one file
+// per imported country. A layer with a bbox is fetched only once the map view
+// touches it, so adding countries doesn't slow down the first load.
+async function loadLayer(layer) {
+  if (state.loaded.has(layer.id)) return;
+  state.loaded.add(layer.id);
+  try {
+    const res = await fetch(layer.file);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const feats = prepare(await res.json()).filter((f) => !state.byId.has(f.properties.id));
+    feats.forEach((f) => state.byId.set(f.properties.id, f));
+    state.all = state.all.concat(feats);
+  } catch (err) {
+    state.loaded.delete(layer.id);
+    console.error(`Impossibile caricare ${layer.file}:`, err);
+  }
+}
+
+const intersects = (a, b) => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
+
+async function loadVisibleLayers({ all = false } = {}) {
+  const b = map.getBounds();
+  const view = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
+  const todo = state.layers.filter((l) => !state.loaded.has(l.id) && (all || !l.bbox || intersects(l.bbox, view)));
+  if (!todo.length) return false;
+  await Promise.all(todo.map(loadLayer));
+  refresh();
+  return true;
+}
+
 // ---------- helpers ----------
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+let regionNames = null;
+try { regionNames = new Intl.DisplayNames(['it'], { type: 'region' }); } catch { /* old browser */ }
+const countryName = (cc) => { try { return regionNames?.of(cc) || cc; } catch { return cc; } };
 
 const safeUrl = (u) => (/^https?:\/\//i.test(u || '') ? u : null);
 
@@ -97,9 +135,10 @@ class BasemapControl {
   onRemove() { this.el.remove(); }
 }
 
-function addBunkerLayers(map) {
+function addBunkerLayers(map, attribution) {
   map.addSource('bunkers', {
     type: 'geojson',
+    attribution,
     data: { type: 'FeatureCollection', features: [] },
     cluster: true,
     clusterRadius: 45,
@@ -170,18 +209,27 @@ function buildFilters() {
     for (const [k, v] of Object.entries(dict)) sel.add(new Option(v, k));
   };
   fill($('#filter-period'), PERIODS);
-  fill($('#filter-status'), STATUSES);
+  fill($('#filter-status'), Object.fromEntries(Object.entries(STATUSES).filter(([k]) => k !== 'active')));
   $('#filter-period').addEventListener('change', (e) => { state.period = e.target.value; refresh(); });
   $('#filter-status').addEventListener('change', (e) => { state.status = e.target.value; refresh(); });
   $('#search').addEventListener('input', (e) => { state.query = e.target.value; refresh(); });
 }
 
+// The list shows what is inside the current map view (named sites first),
+// capped so thousands of imported points don't flood the sidebar.
 function renderResults(list) {
-  $('#result-count').textContent = list.length;
+  $('#result-count').textContent = list.length.toLocaleString('it-IT');
   const ul = $('#results');
   ul.innerHTML = '';
-  const sorted = [...list].sort((a, b) => a.properties.name.localeCompare(b.properties.name, 'it'));
-  for (const f of sorted) {
+  const bounds = map.getBounds();
+  const inView = list.filter((f) => bounds.contains(f.geometry.coordinates));
+  const sorted = inView.sort((a, b) => (!!a.properties.unnamed - !!b.properties.unnamed)
+    || a.properties.name.localeCompare(b.properties.name, 'it'));
+  const shown = sorted.slice(0, LIST_LIMIT);
+  $('#results-note').textContent = inView.length === list.length
+    ? ''
+    : `${inView.length.toLocaleString('it-IT')} nella zona visibile${inView.length > LIST_LIMIT ? `, ne mostro ${LIST_LIMIT}` : ''}. Sposta o ingrandisci la mappa per vederne altre.`;
+  for (const f of shown) {
     const p = f.properties;
     const li = document.createElement('li');
     li.innerHTML = `<button type="button" data-id="${esc(p.id)}" class="${p.id === state.selectedId ? 'active' : ''}">
@@ -219,7 +267,7 @@ function renderDetail(f) {
       ${row('Coordinate', coords)}
       ${row('Periodo', PERIODS[p.period])}
       ${row('Costruzione', p.built)}
-      ${row('Origine', [p.country, p.builder].filter(Boolean).join(' – '))}
+      ${row('Origine', [countryName(p.country), p.builder].filter(Boolean).join(' – '))}
       ${row('Funzione originaria', p.function)}
       ${row('Dimensioni', p.dimensions)}
       ${row('Stato', STATUSES[p.status])}
@@ -240,7 +288,7 @@ function setSelectedState(id, value) {
 }
 
 function select(id, { fly } = {}) {
-  const f = state.all.find((x) => x.properties.id === id);
+  const f = state.byId.get(id);
   if (!f) return;
   setSelectedState(state.selectedId, false);
   state.selectedId = id;
@@ -294,20 +342,27 @@ async function main() {
   map.addControl(new maplibregl.ScaleControl(), 'bottom-left');
   map.addControl(new BasemapControl(), 'top-left');
 
-  const [fc] = await Promise.all([
-    fetch(DATA_URL).then((r) => {
+  const [index] = await Promise.all([
+    fetch(INDEX_URL).then((r) => {
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       return r.json();
     }),
     new Promise((res) => map.on('load', res)),
   ]);
-  state.all = prepare(fc);
-  addBunkerLayers(map);
-  refresh();
+  state.layers = index.layers;
+  const attribution = [...new Set(index.layers.map((l) => l.attribution).filter(Boolean))].join(' · ');
+  addBunkerLayers(map, attribution);
+  await loadVisibleLayers();
+  map.on('moveend', () => {
+    loadVisibleLayers().then((changed) => { if (!changed) renderResults(filtered()); });
+  });
 
-  const selectFromHash = () => {
+  const selectFromHash = async () => {
     const id = decodeURIComponent(location.hash.slice(1));
-    if (id && id !== state.selectedId) select(id, { fly: true });
+    if (!id || id === state.selectedId) return;
+    // A link may point to a site in a layer that isn't loaded yet.
+    if (!state.byId.has(id)) await loadVisibleLayers({ all: true });
+    select(id, { fly: true });
   };
   selectFromHash();
   window.addEventListener('hashchange', selectFromHash);
