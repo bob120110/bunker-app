@@ -20,7 +20,11 @@
   <header class="topbar">
     <button id="toggle-sidebar" class="icon-btn" aria-controls="sidebar" aria-expanded="true" title="Filtri">☰</button>
     <h1>Bunker Atlas</h1>
-    <input id="search" type="search" placeholder="Cerca per nome o località…" autocomplete="off" aria-label="Cerca">
+    <div class="search-wrap">
+      <input id="search" type="search" placeholder="Cerca un bunker o un luogo…" autocomplete="off" aria-label="Cerca un bunker o un luogo"
+        role="combobox" aria-expanded="false" aria-controls="search-suggest" aria-autocomplete="list">
+      <div id="search-suggest" class="suggest" role="listbox" aria-label="Suggerimenti" hidden></div>
+    </div>
     <button id="install-app" class="install-btn" hidden>Installa</button>
   </header>
   <div id="offline-banner" class="offline-banner" hidden>Sei offline: dati e zone della mappa già visitate restano disponibili.</div>

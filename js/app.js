@@ -238,12 +238,180 @@ function buildFilters() {
   fill($('#filter-status'), Object.fromEntries(Object.entries(STATUSES).filter(([k]) => k !== 'active')));
   $('#filter-period').addEventListener('change', (e) => { state.period = e.target.value; refresh(); });
   $('#filter-status').addEventListener('change', (e) => { state.status = e.target.value; refresh(); });
-  // Debounced: with thousands of sites, refiltering on every keystroke feels sluggish.
-  let searchTimer;
-  $('#search').addEventListener('input', (e) => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => { state.query = e.target.value; refresh(); }, 250);
+  setupSearch();
+}
+
+// ---------- search: bunkers by name + places (Photon) ----------
+//
+// Typing filters the bunkers by name/town as before. In parallel, places
+// (regions, valleys, cities…) are looked up with Photon, a free OpenStreetMap
+// geocoder. Choosing a place clears the text filter and moves the map there.
+// Only the typed text and the current map centre are sent to Photon.
+
+const PHOTON_URL = 'https://photon.komoot.io/api/';
+const PLACE_TYPES = {
+  country: 'Paese', state: 'Regione', county: 'Provincia o distretto', city: 'Città',
+  district: 'Quartiere o località', locality: 'Località', street: 'Strada', house: 'Edificio', other: 'Luogo',
+};
+const PLACE_ZOOM = { country: 5, state: 7, county: 9, city: 12, district: 13, locality: 13, street: 15, house: 16 };
+
+let placeAbort = null;
+
+async function findPlaces(text) {
+  placeAbort?.abort();
+  placeAbort = new AbortController();
+  const c = map.getCenter();
+  // Areas only (regions, towns, valleys, peaks…): shops and street names just
+  // crowd out the places people actually look for. Weak bias to the map view.
+  const params = new URLSearchParams({
+    q: text, limit: '6', lang: 'default',
+    lat: c.lat.toFixed(2), lon: c.lng.toFixed(2), zoom: String(Math.round(map.getZoom())), location_bias_scale: '0.1',
   });
+  for (const l of ['country', 'state', 'county', 'city', 'district', 'locality', 'other']) params.append('layer', l);
+  const res = await fetch(`${PHOTON_URL}?${params}`, { signal: placeAbort.signal });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const seen = new Set();
+  return (await res.json()).features.filter((f) => {
+    const p = f.properties;
+    const key = `${p.name}|${p.state}|${p.country}`;
+    if (!p.name || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 5);
+}
+
+function goToPlace(f) {
+  const p = f.properties;
+  if (Array.isArray(p.extent) && p.extent.length === 4) {
+    const [w, n, e, s] = p.extent;
+    map.fitBounds([[w, s], [e, n]], { padding: 40, maxZoom: 14 });
+  } else {
+    map.flyTo({ center: f.geometry.coordinates, zoom: PLACE_ZOOM[p.type] || 11 });
+  }
+}
+
+function setupSearch() {
+  const input = $('#search');
+  const box = $('#search-suggest');
+  let options = [];       // [{ el, run }]
+  let active = -1;
+  let places = [];
+  let timer;
+  let enterPending = false; // Enter pressed while places were still loading
+
+  const open = (yes) => {
+    box.hidden = !yes;
+    input.setAttribute('aria-expanded', String(yes));
+  };
+  const setActive = (i) => {
+    active = i;
+    options.forEach((o, k) => {
+      o.el.classList.toggle('active', k === i);
+      o.el.setAttribute('aria-selected', String(k === i));
+    });
+    if (options[i]) options[i].el.scrollIntoView({ block: 'nearest' });
+  };
+
+  function render(text, { loading = false, error = null } = {}) {
+    const matches = filtered().length;
+    options = [];
+    active = -1;
+    box.innerHTML = '';
+    const add = (html, run) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt';
+      b.setAttribute('role', 'option');
+      b.innerHTML = html;
+      // mousedown, not click: fires before the input loses focus.
+      b.addEventListener('mousedown', (e) => { e.preventDefault(); run(); });
+      box.appendChild(b);
+      options.push({ el: b, run });
+    };
+    const heading = (label) => { const h = document.createElement('h3'); h.textContent = label; box.appendChild(h); };
+    const msg = (m) => { const d = document.createElement('div'); d.className = 'msg'; d.textContent = m; box.appendChild(d); };
+
+    heading('Bunker');
+    if (matches) {
+      add(`<strong>${matches.toLocaleString('it-IT')} con “${esc(text)}” nel nome o nella località</strong><small>Mostra sulla mappa</small>`, () => {
+        open(false);
+        fitTo(filtered());
+      });
+    } else {
+      msg(`Nessun bunker con “${text}” nel nome.`);
+    }
+
+    heading('Luoghi');
+    if (!navigator.onLine) msg('Ricerca dei luoghi non disponibile offline.');
+    else if (loading) msg('Cerco…');
+    else if (error) msg('Ricerca dei luoghi non disponibile al momento.');
+    else if (!places.length) msg('Nessun luogo trovato.');
+    for (const f of places) {
+      const p = f.properties;
+      const where = [p.city !== p.name ? p.city : null, p.county, p.state, p.country]
+        .filter((x, i, arr) => x && x !== p.name && arr.indexOf(x) === i).join(', ');
+      add(`<strong>${esc(p.name)}</strong><small>${esc(PLACE_TYPES[p.type] || 'Luogo')}${where ? ` · ${esc(where)}` : ''}</small>`, () => {
+        input.value = '';
+        state.query = '';
+        open(false);
+        refresh();
+        goToPlace(f);
+        input.blur();
+      });
+    }
+    if (places.length) {
+      const c = document.createElement('div');
+      c.className = 'credit';
+      c.innerHTML = 'Luoghi: <a href="https://photon.komoot.io" target="_blank" rel="noopener noreferrer">Photon</a> · © OpenStreetMap';
+      box.appendChild(c);
+    }
+    open(true);
+  }
+
+  input.addEventListener('input', () => {
+    enterPending = false;
+    clearTimeout(timer);
+    // Debounced: refiltering thousands of sites on every keystroke feels sluggish,
+    // and Photon asks clients not to send a request per letter.
+    timer = setTimeout(async () => {
+      const text = input.value.trim();
+      state.query = text;
+      refresh();
+      if (text.length < 3) { places = []; open(false); return; }
+      places = [];
+      render(text, { loading: navigator.onLine });
+      if (!navigator.onLine) return;
+      try {
+        places = await findPlaces(text);
+        if (input.value.trim() === text) {
+          render(text);
+          // Enter was pressed before places arrived and no bunker matched: take the first place.
+          if (enterPending && !filtered().length) options[0]?.run();
+          enterPending = false;
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError' && input.value.trim() === text) render(text, { error: err });
+      }
+    }, 300);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (box.hidden || box.querySelector('.msg')?.textContent === 'Cerco…')) {
+      e.preventDefault();
+      enterPending = true; // answered as soon as the results are in
+      return;
+    }
+    if (box.hidden) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActive(Math.min(active + 1, options.length - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(Math.max(active - 1, 0)); }
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      // Enter with nothing highlighted: the first choice (bunkers if any match, else the first place).
+      (options[active] || options[0])?.run();
+    } else if (e.key === 'Escape') { open(false); }
+  });
+  input.addEventListener('blur', () => setTimeout(() => open(false), 150));
+  input.addEventListener('focus', () => { if (input.value.trim().length >= 3 && box.childElementCount) open(true); });
 }
 
 // The list shows what is inside the current map view (named sites first),

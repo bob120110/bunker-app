@@ -39,11 +39,33 @@ body {
   background: var(--bg);
 }
 .topbar h1 { font-size: 18px; margin: 0; white-space: nowrap; letter-spacing: .02em; }
+.search-wrap { position: relative; flex: 1; min-width: 0; max-width: 420px; margin-left: auto; }
 #search {
-  flex: 1; min-width: 0; max-width: 420px; margin-left: auto;
+  width: 100%;
   padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
   background: var(--panel); color: var(--text); font: inherit;
 }
+
+/* search suggestions */
+.suggest {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20;
+  max-height: min(70vh, 420px); overflow-y: auto;
+  background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+  padding: 6px 0;
+}
+.suggest[hidden] { display: none; }
+.suggest h3 { margin: 6px 12px 2px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.suggest .opt {
+  display: block; width: 100%; text-align: left; border: 0; background: none; color: inherit; font: inherit;
+  padding: 7px 12px; cursor: pointer;
+}
+.suggest .opt small { display: block; color: var(--muted); font-size: 12px; }
+.suggest .opt:hover, .suggest .opt.active { background: var(--panel); }
+.suggest .msg { padding: 6px 12px; color: var(--muted); font-size: 13px; }
+.suggest .credit { padding: 4px 12px 2px; color: var(--muted); font-size: 11px; }
+.suggest .credit a { color: inherit; }
 .icon-btn {
   border: 0; background: transparent; color: var(--text);
   font-size: 18px; width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
@@ -138,6 +160,8 @@ body.sidebar-closed .sidebar { margin-left: calc(-1 * var(--sidebar-w)); }
   .topbar { gap: 8px; }
   .topbar h1 { font-size: 16px; }
   .install-btn { padding: 7px 10px; }
+  /* Suggestions span the full screen width instead of the narrow search box. */
+  .suggest { position: fixed; top: calc(var(--topbar-h) + 4px); left: 8px; right: 8px; }
   .sidebar { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; box-shadow: 4px 0 16px rgba(0,0,0,.15); }
   .detail { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-width: none; max-height: 60%; }
 }

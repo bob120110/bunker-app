@@ -9,7 +9,7 @@
 // - OpenFreeMap style/TileJSON: network-first. They point to versioned tile
 //   URLs that change over time, so a stale cached copy would break the map.
 
-const VERSION = 'v5';
+const VERSION = 'v6';
 const SHELL = `shell-${VERSION}`;
 const DATA = 'data';
 const TILES = 'tiles';
@@ -62,6 +62,8 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
+  // Place search is live-only: let the browser handle it (fails cleanly offline).
+  if (url.hostname === 'photon.komoot.io') return;
 
   if (url.origin === location.origin && url.pathname.includes('/data/')) {
     event.respondWith(networkFirst(req, DATA));

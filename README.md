@@ -7,7 +7,7 @@ This is the **static first version**: a map with no backend. It's plain HTML, CS
 ## What it does
 - A world map built with MapLibre GL JS. Base maps: OpenFreeMap streets (vector, free, no API key), OpenTopoMap terrain and Esri satellite. If OpenFreeMap is unreachable, the app falls back to openstreetmap.org tiles.
 - One colour per category. Nearby points group into clusters until you zoom in.
-- Filters by category, period and status, plus a text search on name, alternate names, place and country.
+- Filters by category, period and status. The search box finds bunkers by name, alternate name, nearest town or country, and also suggests places (regions, valleys, towns) via [Photon](https://photon.komoot.io), moving the map there. Only the search text and map centre are sent to Photon; place search needs a connection.
 - A detail card for each structure, with a reliability label and sources.
 - Link to a single structure with `#<id>`, for example `index.html#it-soratte`.
 - Publication levels from the brief:
