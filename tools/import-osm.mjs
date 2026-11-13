@@ -17,7 +17,8 @@
 // OSM data is © OpenStreetMap contributors, ODbL. The output keeps a link to
 // every source object and must stay under the ODbL (open, with attribution).
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { writeCountry, otherCountryIds } from './lib/cells.mjs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,7 +42,7 @@ const opt = (name) => { const i = args.indexOf(name); return i > 0 ? args[i + 1]
 
 // ---------- Overpass ----------
 
-const BUNKER_QUERY = `[out:json][timeout:300];
+const BUNKER_QUERY = `[out:json][timeout:600];
 area["ISO3166-1"="${cc}"][admin_level=2]->.c;
 (
   nwr["military"="bunker"](area.c);
@@ -240,13 +241,7 @@ const curated = JSON.parse(readFileSync(join(ROOT, 'data/bunkers.geojson'), 'utf
 const nearCurated = (c) => curated.some((f) => metres(c, f.geometry.coordinates) < 150);
 
 // Objects on a border are returned for both countries: keep the first copy.
-const ownFile = `data/osm/${cc.toLowerCase()}.geojson`;
-const otherLayers = existsSync(join(ROOT, 'data/index.json'))
-  ? JSON.parse(readFileSync(join(ROOT, 'data/index.json'), 'utf8')).layers.filter((l) => l.id !== 'curated' && l.file !== ownFile)
-  : [];
-const inOtherCountry = new Set(otherLayers.flatMap((l) => {
-  try { return JSON.parse(readFileSync(join(ROOT, l.file), 'utf8')).features.map((f) => f.properties.id); } catch { return []; }
-}));
+const inOtherCountry = otherCountryIds(ROOT, cc);
 
 const stats = { total: 0, noCoords: 0, nearCurated: 0, approximate: 0, otherCountry: 0 };
 const seen = new Set();
@@ -310,43 +305,13 @@ if (!features.length) {
 
 // ---------- write ----------
 
-const outRel = `data/osm/${cc.toLowerCase()}.geojson`;
-mkdirSync(join(ROOT, 'data/osm'), { recursive: true });
-// One feature per line: readable diffs between imports, still valid JSON.
-writeFileSync(join(ROOT, outRel),
-  '{"type":"FeatureCollection","features":[\n' + features.map((f) => JSON.stringify(f)).join(',\n') + '\n]}\n');
-
-// Areas the layer covers, as one box per occupied 5°×5° cell. A single bbox
-// would span half the globe for countries with overseas territories (France),
-// and then the app would download the file wherever the map is.
-const CELL = 5;
-const cells = new Set(features.map((f) => {
-  const [x, y] = f.geometry.coordinates;
-  return `${Math.floor(x / CELL)}:${Math.floor(y / CELL)}`;
-}));
-const bboxes = [...cells].sort().map((k) => {
-  const [cx, cy] = k.split(':').map(Number);
-  return [cx * CELL, cy * CELL, (cx + 1) * CELL, (cy + 1) * CELL];
-});
-
-const indexPath = join(ROOT, 'data/index.json');
-const index = existsSync(indexPath)
-  ? JSON.parse(readFileSync(indexPath, 'utf8'))
-  : { layers: [{ id: 'curated', file: 'data/bunkers.geojson' }] };
-index.layers = index.layers.filter((l) => l.id !== `osm-${cc.toLowerCase()}`);
-index.layers.push({
-  id: `osm-${cc.toLowerCase()}`,
-  file: outRel,
-  bboxes,
-  count: features.length,
-  attribution: '© OpenStreetMap contributors (ODbL)',
+const layers = writeCountry(ROOT, cc, features, {
   updated: (raw.osm3s?.timestamp_osm_base || new Date().toISOString()).slice(0, 10),
 });
-writeFileSync(indexPath, JSON.stringify(index, null, 2) + '\n');
 
 const by = (k) => Object.entries(features.reduce((m, f) => ((m[f.properties[k]] = (m[f.properties[k]] || 0) + 1), m), {}))
   .sort((a, b) => b[1] - a[1]).map(([v, n]) => `${v} ${n}`).join(', ');
-console.log(`${cc}: ${features.length} bunkers written to ${outRel}`);
+console.log(`${cc}: ${features.length} bunkers written to data/osm/${cc.toLowerCase()}/ (${layers.length} map squares)`);
 console.log(`  skipped: ${stats.noCoords} without coordinates, ${stats.nearCurated} duplicates of curated sites, ${stats.otherCountry} already in another country's file`);
 console.log(`  approximate (private access): ${stats.approximate}`);
 console.log(`  named: ${features.filter((f) => !f.properties.unnamed).length}`);

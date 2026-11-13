@@ -34,8 +34,16 @@ To rebuild the PNG icons after changing `icons/icon.svg`, re-render it at 192, 5
 
 ## Data
 The data is split into layers listed in `data/index.json`:
-- `data/bunkers.geojson`: the curated list, written by hand.
-- `data/osm/<country>.geojson`: bunkers imported from OpenStreetMap, one file per country. The app only downloads a country file when the map shows that country.
+- `data/bunkers.geojson`: the curated list, written by hand. It is always loaded.
+- `data/osm/<country>/<square>.geojson`: bunkers imported from OpenStreetMap, split into 2°×2° map squares (about 200 km), e.g. `data/osm/fr/e6n48.geojson`. Each square is listed in the index with its box, centre and count.
+
+When zoomed out (below zoom 5) the app downloads no squares. It draws one count bubble per square instead. Zooming in downloads only the squares on screen. Turning on a filter or typing a search downloads all squares once, since a filter must see every site. Downloaded squares stay available offline.
+
+To re-split already imported countries without downloading them again (e.g. after changing the square size in `tools/lib/cells.mjs`):
+
+```bash
+node tools/resplit.mjs
+```
 
 Run the validator after every change. It checks every layer:
 

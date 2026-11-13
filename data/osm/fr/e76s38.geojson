@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[77.569481,-37.796373]},"properties":{"id":"osm-w686255419","name":"Cave sismo","alt_names":[],"place":"Francia","country":"FR","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – way/686255419","url":"https://www.openstreetmap.org/way/686255419"}]}}
+]}

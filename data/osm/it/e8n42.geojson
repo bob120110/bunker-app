@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[8.015341,43.872265]},"properties":{"id":"osm-n12863978096","name":"Postazione fortificata presso Imperia","unnamed":true,"alt_names":[],"place":"Imperia","country":"IT","builder":"","category":"fortification","period":"unknown","built":"","function":"Postazione d'artiglieria","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/12863978096","url":"https://www.openstreetmap.org/node/12863978096"}]}}
+]}

@@ -9,7 +9,7 @@
 // - OpenFreeMap style/TileJSON: network-first. They point to versioned tile
 //   URLs that change over time, so a stale cached copy would break the map.
 
-const VERSION = 'v6';
+const VERSION = 'v7';
 const SHELL = `shell-${VERSION}`;
 const DATA = 'data';
 const TILES = 'tiles';

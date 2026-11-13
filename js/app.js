@@ -4,13 +4,17 @@ import {
 
 const INDEX_URL = 'data/index.json';
 const LIST_LIMIT = 200;
+// Below this zoom, imported squares are shown as one count bubble each and
+// their details are not downloaded (the whole of Europe would be megabytes).
+const DETAIL_ZOOM = 5;
 const $ = (sel) => document.querySelector(sel);
 
 const state = {
   all: [],                                   // prepared features, all loaded layers
   byId: new Map(),
   layers: [],                                // entries of data/index.json
-  loaded: new Set(),                         // layer ids already fetched or loading
+  requested: new Set(),                      // layer ids being fetched or fetched
+  loaded: new Set(),                         // layer ids fully loaded
   categories: new Set(Object.keys(CATEGORIES)),
   period: '',
   status: '',
@@ -56,35 +60,57 @@ function filtered() {
 // per imported country. A layer with a bbox is fetched only once the map view
 // touches it, so adding countries doesn't slow down the first load.
 async function loadLayer(layer) {
-  if (state.loaded.has(layer.id)) return;
-  state.loaded.add(layer.id);
+  if (state.requested.has(layer.id)) return;
+  state.requested.add(layer.id);
   try {
     const res = await fetch(layer.file);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const feats = prepare(await res.json()).filter((f) => !state.byId.has(f.properties.id));
     feats.forEach((f) => state.byId.set(f.properties.id, f));
     state.all = state.all.concat(feats);
+    state.loaded.add(layer.id); // only now: until then its bubble and count stay
   } catch (err) {
-    state.loaded.delete(layer.id);
+    state.requested.delete(layer.id);
     console.error(`Impossibile caricare ${layer.file}:`, err);
   }
 }
 
 const intersects = (a, b) => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
 
+const layerBoxes = (l) => l.bboxes || (l.bbox ? [l.bbox] : null);
+
+// Filters and text search must see every site, so they load all squares
+// (once; afterwards the files come from the offline cache).
+const filtersActive = () => state.categories.size < Object.keys(CATEGORIES).length
+  || !!state.period || !!state.status || state.query.trim().length >= 3;
+
 async function loadVisibleLayers({ all = false } = {}) {
   const b = map.getBounds();
   const view = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
-  const covers = (l) => {
-    const boxes = l.bboxes || (l.bbox ? [l.bbox] : null);
-    return !boxes || boxes.some((bb) => intersects(bb, view));
+  const detail = map.getZoom() >= DETAIL_ZOOM;
+  const wanted = (l) => {
+    const boxes = layerBoxes(l);
+    if (!boxes) return true; // curated list: always
+    return detail && boxes.some((bb) => intersects(bb, view));
   };
-  const todo = state.layers.filter((l) => !state.loaded.has(l.id) && (all || covers(l)));
+  const todo = state.layers.filter((l) => !state.requested.has(l.id) && (all || filtersActive() || wanted(l)));
   if (!todo.length) return false;
   await Promise.all(todo.map(loadLayer));
   refresh();
   return true;
 }
+
+// One bubble per square that isn't downloaded yet, at its centre, with its count.
+function updateSummary() {
+  const features = state.layers
+    .filter((l) => l.center && l.count && !state.loaded.has(l.id))
+    .map((l) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: l.center }, properties: { count: l.count } }));
+  map.getSource('summary')?.setData({ type: 'FeatureCollection', features });
+}
+
+const unloadedCount = () => state.layers
+  .filter((l) => l.count && !state.loaded.has(l.id))
+  .reduce((s, l) => s + l.count, 0);
 
 // ---------- helpers ----------
 
@@ -203,13 +229,43 @@ function addBunkerLayers(map, attribution) {
     },
   });
 
+  // Count bubbles for squares not downloaded yet (same look as clusters).
+  // Nearby squares merge into one bubble showing the summed count.
+  map.addSource('summary', {
+    type: 'geojson',
+    data: { type: 'FeatureCollection', features: [] },
+    cluster: true,
+    clusterRadius: 50,
+    clusterProperties: { total: ['+', ['get', 'count']] },
+  });
+  const n = ['coalesce', ['get', 'total'], ['get', 'count']];
+  map.addLayer({
+    id: 'summary', type: 'circle', source: 'summary',
+    paint: {
+      'circle-color': '#1c2833', 'circle-opacity': 0.85,
+      'circle-radius': ['step', n, 14, 10, 18, 100, 22, 1000, 26, 5000, 30],
+      'circle-stroke-width': 2, 'circle-stroke-color': '#fff',
+    },
+  });
+  map.addLayer({
+    id: 'summary-count', type: 'symbol', source: 'summary',
+    layout: {
+      'text-field': ['case', ['>=', n, 1000], ['concat', ['to-string', ['/', ['round', ['/', n, 100]], 10]], 'k'], ['to-string', n]],
+      'text-font': [MAP_FONT], 'text-size': 12, 'text-allow-overlap': true,
+    },
+    paint: { 'text-color': '#fff' },
+  });
+  map.on('click', 'summary', (e) => {
+    map.easeTo({ center: e.features[0].geometry.coordinates, zoom: Math.max(map.getZoom() + 2, DETAIL_ZOOM + 1) });
+  });
+
   map.on('click', 'clusters', async (e) => {
     const f = e.features[0];
     const zoom = await map.getSource('bunkers').getClusterExpansionZoom(f.properties.cluster_id);
     map.easeTo({ center: f.geometry.coordinates, zoom });
   });
   map.on('click', 'points', (e) => select(e.features[0].properties.id, { fly: false }));
-  for (const layer of ['clusters', 'points']) {
+  for (const layer of ['clusters', 'points', 'summary']) {
     map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
   }
@@ -417,7 +473,10 @@ function setupSearch() {
 // The list shows what is inside the current map view (named sites first),
 // capped so thousands of imported points don't flood the sidebar.
 function renderResults(list) {
-  $('#result-count').textContent = list.length.toLocaleString('it-IT');
+  const pending = unloadedCount();
+  // A filter applies to every site, so until all squares are in, any number would be wrong.
+  const loadingAll = pending && filtersActive();
+  $('#result-count').textContent = loadingAll ? '…' : (list.length + pending).toLocaleString('it-IT');
   const ul = $('#results');
   ul.innerHTML = '';
   const bounds = map.getBounds();
@@ -425,9 +484,13 @@ function renderResults(list) {
   const sorted = inView.sort((a, b) => (!!a.properties.unnamed - !!b.properties.unnamed)
     || a.properties.name.localeCompare(b.properties.name, 'it'));
   const shown = sorted.slice(0, LIST_LIMIT);
-  $('#results-note').textContent = inView.length === list.length
-    ? ''
-    : `${inView.length.toLocaleString('it-IT')} nella zona visibile${inView.length > LIST_LIMIT ? `, ne mostro ${LIST_LIMIT}` : ''}. Sposta o ingrandisci la mappa per vederne altre.`;
+  $('#results-note').textContent = loadingAll
+    ? 'Carico i dati di tutte le zone per applicare il filtro…'
+    : pending && map.getZoom() < DETAIL_ZOOM
+    ? 'Elenco parziale: ingrandisci la mappa su una zona per vedere tutti i bunker.'
+    : inView.length === list.length + pending
+      ? ''
+      : `${inView.length.toLocaleString('it-IT')} nella zona visibile${inView.length > LIST_LIMIT ? `, ne mostro ${LIST_LIMIT}` : ''}. Sposta o ingrandisci la mappa per vederne altre.`;
   for (const f of shown) {
     const p = f.properties;
     const li = document.createElement('li');
@@ -519,6 +582,9 @@ function fitTo(list) {
 }
 
 function refresh() {
+  // A filter or search needs every site: fetch the remaining squares first.
+  if (filtersActive() && unloadedCount()) { loadVisibleLayers({ all: true }); }
+  updateSummary();
   const list = filtered();
   map.getSource('bunkers').setData({ type: 'FeatureCollection', features: list });
   renderResults(list);
@@ -536,6 +602,7 @@ async function main() {
     zoom: 3,
     attributionControl: { compact: true },
   });
+  window.bunkerAtlas = { map, state }; // handy for debugging in the browser console
   map.addControl(new maplibregl.NavigationControl(), 'top-right');
   map.addControl(new maplibregl.GeolocateControl({ trackUserLocation: false }), 'top-right');
   map.addControl(new maplibregl.ScaleControl(), 'bottom-left');
