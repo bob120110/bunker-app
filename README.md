@@ -72,6 +72,22 @@ This downloads every bunker-type object in the country from the Overpass API. Th
 
 If the public Overpass server is busy, save the query results yourself and pass them in with `--bunkers file.json --places file.json`.
 
+### Filling in periods
+Most OpenStreetMap bunkers have no date. `tools/infer-periods.mjs` fills in the period of undated sites and marks every guess:
+
+```bash
+node tools/infer-periods.mjs --coast ne_10m_coastline.geojson --borders ne_10m_admin_0_boundary_lines_land.geojson          # dry run: counts + examples
+node tools/infer-periods.mjs --coast ne_10m_coastline.geojson --borders ne_10m_admin_0_boundary_lines_land.geojson --apply  # write
+```
+
+- **Wikidata:** a construction or opening date on the linked Wikidata item. The app shows "Fonte: Wikidata".
+- **Name rules:** words that identify a fortification line or building type, e.g. "Opera 205" (Vallo Alpino), "Hollandstellung", "Hochbunker", "Tobruk".
+- **Location rules:** within 2 km of the coast in mainland France and Benelux (Atlantic Wall / Südwall). Within 25 km of Germany's western border, south of Kleve (Westwall). Within 15 km of France's border with Germany and Luxembourg (Maginot Line). Named older forts are never dated by location.
+
+Name and location guesses get `period_source: "inferred:<rule>"` and a `period_note`. The app shows them as "probabile", with the reason. Sites that already had a period are never changed.
+
+The location rules need the Natural Earth 10m coastline and land boundary lines (public domain, from [natural-earth-vector](https://github.com/nvkelso/natural-earth-vector/tree/master/geojson)). They aren't stored in this repo. **Re-importing a country resets its periods, so run this tool again after any import.**
+
 **License:** imported data is © OpenStreetMap contributors under the ODbL. The map shows that attribution, and the data files must stay open under the same license.
 
 | Field | Values |

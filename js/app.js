@@ -506,6 +506,20 @@ function row(label, value) {
   return value ? `<dt>${esc(label)}</dt><dd>${esc(value)}</dd>` : '';
 }
 
+// Periods guessed by tools/infer-periods.mjs are shown as "probabile" with the
+// reason; periods taken from Wikidata name their source.
+function periodRow(p) {
+  const label = PERIODS[p.period];
+  if (!label) return '';
+  const src = p.period_source || '';
+  if (src.startsWith('inferred:')) {
+    return `<dt>Periodo</dt><dd>${esc(label)} <span class="tag-probable">probabile</span>`
+      + `${p.period_note ? `<small class="why">Stima: ${esc(p.period_note)}</small>` : ''}</dd>`;
+  }
+  if (src === 'wikidata') return `<dt>Periodo</dt><dd>${esc(label)}<small class="why">Fonte: Wikidata</small></dd>`;
+  return row('Periodo', label);
+}
+
 function renderDetail(f) {
   const p = f.properties;
   const [lng, lat] = f.geometry.coordinates;
@@ -527,7 +541,7 @@ function renderDetail(f) {
     <dl>
       ${row('Località', p.place)}
       ${row('Coordinate', coords)}
-      ${row('Periodo', PERIODS[p.period])}
+      ${periodRow(p)}
       ${row('Costruzione', p.built)}
       ${row('Origine', [countryName(p.country), p.builder].filter(Boolean).join(' – '))}
       ${row('Funzione originaria', p.function)}
