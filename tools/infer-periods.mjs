@@ -15,7 +15,9 @@
 //   2. Name rules: words that identify a fortification line or building type
 //   3. Location rules: Atlantic Wall coast, Westwall and Maginot border zones
 // Rules 2-3 set period_source "inferred:<rule>" (shown as "probabile").
-// Sites that already have a period are never touched.
+// Periods that came from OpenStreetMap are never touched. Periods this tool set
+// earlier (period_source present) are recalculated from scratch on every run,
+// so improved rules also fix earlier guesses.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -58,6 +60,20 @@ const NAME_RULES = [
   { id: 'atlantikwall-name', period: 'ww2', countries: ['FR', 'BE', 'NL'], re: /\bflak\b|encuvement|\bcuve\b|deutscher|\bwn\s?\d|\bstp\b|st[üu]tzpunkt|widerstandsnest|regelbau|\br\s?6\d\d\b/, why: 'Termini del Vallo Atlantico (Regelbau, WN, Flak…), 1942–44' },
   { id: 'rifugio-antiaereo', period: 'ww2', countries: ['IT'], re: /antiaere/, why: 'Rifugio antiaereo, 1940–45' },
   { id: 'swiss-army', period: 'ww2', countries: ['CH'], re: /infanteriebunker|infanteriewerk|artilleriewerk|\blmg\b|unterstand|felsenwerk|infanteriekanonen/, why: 'Fortificazioni svizzere del Ridotto nazionale, per lo più 1937–45' },
+  // Central and Eastern Europe
+  { id: 'peter-fortress', period: 'ww1', countries: ['EE'], re: /peeter suure merekindlus/, why: 'Fortezza navale di Pietro il Grande, 1912–17' },
+  { id: 'latvian-riflemen', period: 'ww1', countries: ['LV'], re: /str[ēe]lnieku/, why: 'Fucilieri lettoni, 1915–17' },
+  { id: 'cs-fortification-code', period: 'interwar', countries: ['CZ', 'SK'], re: /^[^/]{1,10}\/\d+[a-z]?\/|\b[a-zžř]{1,3}-[a-zž]{1,3}\s?\d|řop|lehk[éeý] opevn|t[ěe]žk[éeý] opevn|škvorov/, why: 'Sigla delle fortificazioni cecoslovacche (es. "A-160", "K-S 14"), 1935–38' },
+  { id: 'polish-lines', period: 'interwar', countries: ['PL'], re: /wa[łl] pomorsk|pommernstellung|\bowś\b|obszar warown|\bm\.?\s?r\.?\s?u\b|mi[ęe]dzyrzeck|ostwall|pz\.?\s?w\.?\s?\d|panzerwerk/, why: 'Vallo di Pomerania, Ostwall/MRU, Area fortificata della Slesia, 1932–39' },
+  { id: 'baltic-interwar', period: 'interwar', countries: ['LV'], re: /starpkaru/, why: '"Starpkaru" (tra le due guerre) nel nome' },
+  { id: 'molotov-line', period: 'ww2', countries: ['PL', 'LT', 'LV', 'EE'], re: /mo[łl]otov|mo[łl]otow/, why: 'Linea Molotov, 1940–41' },
+  { id: 'kochbunker', period: 'ww2', countries: ['PL'], re: /kochbunker|koch-bunker/, why: 'Kochbunker, 1944–45' },
+  { id: 'snp', period: 'ww2', countries: ['SK'], re: /\bsnp\b|povstalec/, why: 'Insurrezione nazionale slovacca, 1944' },
+  { id: 'baltic-partisans', period: 'cold_war', countries: ['EE', 'LV', 'LT'], re: /metsaven|partizan|apygardos/, why: 'Partigiani antisovietici ("Fratelli della foresta"), 1944–53' },
+  { id: 'missile-base', period: 'cold_war', countries: ['EE', 'LV', 'LT', 'PL', 'CZ', 'SK'], re: /raket|rakeet|raķe|r-12\b|r-14\b|branduolin|jadern/, why: 'Base missilistica o deposito nucleare sovietico, 1958–91' },
+  { id: 'cs-civil-defence', period: 'cold_war', countries: ['CZ', 'SK'], re: /kryt civiln|\bco\b|čsla|civiln[ií] obrany/, why: 'Protezione civile cecoslovacca (CO) o Esercito popolare (ČSLA), 1950–89' },
+  // Hardened aircraft shelters: a 1960s–80s design everywhere.
+  { id: 'aircraft-shelter', period: 'cold_war', re: /ricovero corazzato per aerei/, why: 'Ricovero corazzato per aerei: tipico 1965–90' },
   // Cold War
   { id: 'cold-war-military', period: 'cold_war', re: /\bmace\b|\bnike\b|\bhawk\b|pershing|raketenstellung|\bnato\b|\botan\b|bundeswehr|u\.?s\.? army|nva\b/, why: 'Basi missilistiche e militari NATO/Bundeswehr, 1950–90' },
   { id: 'civil-defence', period: 'cold_war', countries: ['CH', 'DE', 'AT'], re: /zivilschutz|schutzraum|atombunker|abc-schutz|regierungsbunker/, why: 'Protezione civile/antiatomica, 1950–90' },
@@ -161,7 +177,9 @@ async function wikidataYears(qids) {
 
 const layers = readIndex(ROOT).layers.filter((l) => l.country);
 const files = layers.map((l) => ({ l, fc: JSON.parse(readFileSync(join(ROOT, l.file), 'utf8')) }));
-const undated = files.flatMap(({ fc }) => fc.features).filter((f) => f.properties.period === 'unknown');
+const undated = files.flatMap(({ fc }) => fc.features)
+  .filter((f) => f.properties.period === 'unknown' || f.properties.period_source);
+const previous = new Map(undated.map((f) => [f.properties.id, f.properties.period]));
 
 const wd = new Map();
 if (!args.includes('--no-wikidata')) {
@@ -212,7 +230,19 @@ for (const { rule, list } of hits.values()) {
 if (!coastFile || !bordersFile) console.log('\n(location rules skipped: pass --coast and --borders to enable them)');
 console.log(`\nWould date ${total.toLocaleString('en')} of ${undated.length.toLocaleString('en')} undated sites; ${(undated.length - total).toLocaleString('en')} stay "Non specificato".`);
 
+// What changes compared with the periods already in the files.
+const changed = [...hits.values()].flatMap(({ list }) => list).filter(({ f, period }) => previous.get(f.properties.id) !== period);
+const reset = undated.filter((f) => f.properties.period_source && ![...hits.values()].some(({ list }) => list.some((h) => h.f === f)));
+console.log(`Compared with the current files: ${changed.length.toLocaleString('en')} sites get a new or different period, ${reset.length} earlier guesses go back to "Non specificato".`);
+const moves = changed.reduce((m, { f, period }) => { const k = `${previous.get(f.properties.id)} → ${period}`; m[k] = (m[k] || 0) + 1; return m; }, {});
+for (const [k, n] of Object.entries(moves).sort((a, b) => b[1] - a[1])) console.log(`  ${k}: ${n}`);
+
 if (APPLY) {
+  for (const f of undated) {
+    delete f.properties.period_source;
+    delete f.properties.period_note;
+    f.properties.period = 'unknown';
+  }
   for (const { rule, list } of hits.values()) {
     for (const { f, period } of list) {
       f.properties.period = period;

@@ -1947,6 +1947,870 @@
       "count": 288,
       "attribution": "© OpenStreetMap contributors (ODbL)",
       "updated": "2026-11-13"
+    },
+    {
+      "id": "osm-ee-e20n58",
+      "country": "EE",
+      "file": "data/osm/ee/e20n58.geojson",
+      "bbox": [
+        20,
+        58,
+        22,
+        60
+      ],
+      "center": [
+        21.997,
+        58.504
+      ],
+      "count": 1,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-ee-e22n56",
+      "country": "EE",
+      "file": "data/osm/ee/e22n56.geojson",
+      "bbox": [
+        22,
+        56,
+        24,
+        58
+      ],
+      "center": [
+        22.058,
+        57.927
+      ],
+      "count": 8,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-ee-e22n58",
+      "country": "EE",
+      "file": "data/osm/ee/e22n58.geojson",
+      "bbox": [
+        22,
+        58,
+        24,
+        60
+      ],
+      "center": [
+        22.99,
+        59.144
+      ],
+      "count": 31,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-ee-e24n58",
+      "country": "EE",
+      "file": "data/osm/ee/e24n58.geojson",
+      "bbox": [
+        24,
+        58,
+        26,
+        60
+      ],
+      "center": [
+        24.647,
+        59.203
+      ],
+      "count": 110,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-ee-e26n56",
+      "country": "EE",
+      "file": "data/osm/ee/e26n56.geojson",
+      "bbox": [
+        26,
+        56,
+        28,
+        58
+      ],
+      "center": [
+        26.498,
+        57.748
+      ],
+      "count": 2,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-ee-e26n58",
+      "country": "EE",
+      "file": "data/osm/ee/e26n58.geojson",
+      "bbox": [
+        26,
+        58,
+        28,
+        60
+      ],
+      "center": [
+        26.437,
+        59.147
+      ],
+      "count": 3,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lv-e20n56",
+      "country": "LV",
+      "file": "data/osm/lv/e20n56.geojson",
+      "bbox": [
+        20,
+        56,
+        22,
+        58
+      ],
+      "center": [
+        21.271,
+        56.715
+      ],
+      "count": 187,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lv-e22n56",
+      "country": "LV",
+      "file": "data/osm/lv/e22n56.geojson",
+      "bbox": [
+        22,
+        56,
+        24,
+        58
+      ],
+      "center": [
+        22.947,
+        57.02
+      ],
+      "count": 81,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lv-e24n56",
+      "country": "LV",
+      "file": "data/osm/lv/e24n56.geojson",
+      "bbox": [
+        24,
+        56,
+        26,
+        58
+      ],
+      "center": [
+        24.636,
+        56.868
+      ],
+      "count": 271,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lv-e26n54",
+      "country": "LV",
+      "file": "data/osm/lv/e26n54.geojson",
+      "bbox": [
+        26,
+        54,
+        28,
+        56
+      ],
+      "center": [
+        26.505,
+        55.881
+      ],
+      "count": 21,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lv-e26n56",
+      "country": "LV",
+      "file": "data/osm/lv/e26n56.geojson",
+      "bbox": [
+        26,
+        56,
+        28,
+        58
+      ],
+      "center": [
+        27.068,
+        57.139
+      ],
+      "count": 29,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lt-e20n54",
+      "country": "LT",
+      "file": "data/osm/lt/e20n54.geojson",
+      "bbox": [
+        20,
+        54,
+        22,
+        56
+      ],
+      "center": [
+        21.25,
+        55.861
+      ],
+      "count": 41,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lt-e20n56",
+      "country": "LT",
+      "file": "data/osm/lt/e20n56.geojson",
+      "bbox": [
+        20,
+        56,
+        22,
+        58
+      ],
+      "center": [
+        21.906,
+        56.031
+      ],
+      "count": 5,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lt-e22n52",
+      "country": "LT",
+      "file": "data/osm/lt/e22n52.geojson",
+      "bbox": [
+        22,
+        52,
+        24,
+        54
+      ],
+      "center": [
+        23.718,
+        53.969
+      ],
+      "count": 30,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lt-e22n54",
+      "country": "LT",
+      "file": "data/osm/lt/e22n54.geojson",
+      "bbox": [
+        22,
+        54,
+        24,
+        56
+      ],
+      "center": [
+        22.912,
+        54.822
+      ],
+      "count": 211,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lt-e24n52",
+      "country": "LT",
+      "file": "data/osm/lt/e24n52.geojson",
+      "bbox": [
+        24,
+        52,
+        26,
+        54
+      ],
+      "center": [
+        24.083,
+        53.994
+      ],
+      "count": 1,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lt-e24n54",
+      "country": "LT",
+      "file": "data/osm/lt/e24n54.geojson",
+      "bbox": [
+        24,
+        54,
+        26,
+        56
+      ],
+      "center": [
+        24.646,
+        55.124
+      ],
+      "count": 17,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-lt-e26n54",
+      "country": "LT",
+      "file": "data/osm/lt/e26n54.geojson",
+      "bbox": [
+        26,
+        54,
+        28,
+        56
+      ],
+      "center": [
+        26.531,
+        55.234
+      ],
+      "count": 4,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-sk-e16n48",
+      "country": "SK",
+      "file": "data/osm/sk/e16n48.geojson",
+      "bbox": [
+        16,
+        48,
+        18,
+        50
+      ],
+      "center": [
+        17.034,
+        48.322
+      ],
+      "count": 263,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-sk-e18n46",
+      "country": "SK",
+      "file": "data/osm/sk/e18n46.geojson",
+      "bbox": [
+        18,
+        46,
+        20,
+        48
+      ],
+      "center": [
+        18.087,
+        47.759
+      ],
+      "count": 1,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-sk-e18n48",
+      "country": "SK",
+      "file": "data/osm/sk/e18n48.geojson",
+      "bbox": [
+        18,
+        48,
+        20,
+        50
+      ],
+      "center": [
+        19.13,
+        48.762
+      ],
+      "count": 225,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-sk-e20n48",
+      "country": "SK",
+      "file": "data/osm/sk/e20n48.geojson",
+      "bbox": [
+        20,
+        48,
+        22,
+        50
+      ],
+      "center": [
+        21.375,
+        48.73
+      ],
+      "count": 134,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-sk-e22n48",
+      "country": "SK",
+      "file": "data/osm/sk/e22n48.geojson",
+      "bbox": [
+        22,
+        48,
+        24,
+        50
+      ],
+      "center": [
+        22.334,
+        48.954
+      ],
+      "count": 4,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-cz-e12n48",
+      "country": "CZ",
+      "file": "data/osm/cz/e12n48.geojson",
+      "bbox": [
+        12,
+        48,
+        14,
+        50
+      ],
+      "center": [
+        13.342,
+        49.456
+      ],
+      "count": 594,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-cz-e12n50",
+      "country": "CZ",
+      "file": "data/osm/cz/e12n50.geojson",
+      "bbox": [
+        12,
+        50,
+        14,
+        52
+      ],
+      "center": [
+        13.491,
+        50.289
+      ],
+      "count": 637,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-cz-e14n48",
+      "country": "CZ",
+      "file": "data/osm/cz/e14n48.geojson",
+      "bbox": [
+        14,
+        48,
+        16,
+        50
+      ],
+      "center": [
+        15.265,
+        49.059
+      ],
+      "count": 754,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-cz-e14n50",
+      "country": "CZ",
+      "file": "data/osm/cz/e14n50.geojson",
+      "bbox": [
+        14,
+        50,
+        16,
+        52
+      ],
+      "center": [
+        15.023,
+        50.65
+      ],
+      "count": 1579,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-cz-e16n48",
+      "country": "CZ",
+      "file": "data/osm/cz/e16n48.geojson",
+      "bbox": [
+        16,
+        48,
+        18,
+        50
+      ],
+      "center": [
+        16.92,
+        49.221
+      ],
+      "count": 1049,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-cz-e16n50",
+      "country": "CZ",
+      "file": "data/osm/cz/e16n50.geojson",
+      "bbox": [
+        16,
+        50,
+        18,
+        52
+      ],
+      "center": [
+        16.615,
+        50.255
+      ],
+      "count": 1520,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-cz-e18n48",
+      "country": "CZ",
+      "file": "data/osm/cz/e18n48.geojson",
+      "bbox": [
+        18,
+        48,
+        20,
+        50
+      ],
+      "center": [
+        18.269,
+        49.88
+      ],
+      "count": 147,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e14n50",
+      "country": "PL",
+      "file": "data/osm/pl/e14n50.geojson",
+      "bbox": [
+        14,
+        50,
+        16,
+        52
+      ],
+      "center": [
+        15.668,
+        51.651
+      ],
+      "count": 236,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e14n52",
+      "country": "PL",
+      "file": "data/osm/pl/e14n52.geojson",
+      "bbox": [
+        14,
+        52,
+        16,
+        54
+      ],
+      "center": [
+        15.387,
+        52.831
+      ],
+      "count": 716,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e14n54",
+      "country": "PL",
+      "file": "data/osm/pl/e14n54.geojson",
+      "bbox": [
+        14,
+        54,
+        16,
+        56
+      ],
+      "center": [
+        15.459,
+        54.16
+      ],
+      "count": 22,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e16n50",
+      "country": "PL",
+      "file": "data/osm/pl/e16n50.geojson",
+      "bbox": [
+        16,
+        50,
+        18,
+        52
+      ],
+      "center": [
+        16.925,
+        51.095
+      ],
+      "count": 291,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e16n52",
+      "country": "PL",
+      "file": "data/osm/pl/e16n52.geojson",
+      "bbox": [
+        16,
+        52,
+        18,
+        54
+      ],
+      "center": [
+        16.703,
+        53.28
+      ],
+      "count": 776,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e16n54",
+      "country": "PL",
+      "file": "data/osm/pl/e16n54.geojson",
+      "bbox": [
+        16,
+        54,
+        18,
+        56
+      ],
+      "center": [
+        16.844,
+        54.477
+      ],
+      "count": 37,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e18n48",
+      "country": "PL",
+      "file": "data/osm/pl/e18n48.geojson",
+      "bbox": [
+        18,
+        48,
+        20,
+        50
+      ],
+      "center": [
+        19.507,
+        49.736
+      ],
+      "count": 198,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e18n50",
+      "country": "PL",
+      "file": "data/osm/pl/e18n50.geojson",
+      "bbox": [
+        18,
+        50,
+        20,
+        52
+      ],
+      "center": [
+        19.125,
+        50.459
+      ],
+      "count": 1277,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e18n52",
+      "country": "PL",
+      "file": "data/osm/pl/e18n52.geojson",
+      "bbox": [
+        18,
+        52,
+        20,
+        54
+      ],
+      "center": [
+        18.777,
+        53.027
+      ],
+      "count": 640,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e18n54",
+      "country": "PL",
+      "file": "data/osm/pl/e18n54.geojson",
+      "bbox": [
+        18,
+        54,
+        20,
+        56
+      ],
+      "center": [
+        19.255,
+        54.39
+      ],
+      "count": 366,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e20n48",
+      "country": "PL",
+      "file": "data/osm/pl/e20n48.geojson",
+      "bbox": [
+        20,
+        48,
+        22,
+        50
+      ],
+      "center": [
+        20.703,
+        49.773
+      ],
+      "count": 140,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e20n50",
+      "country": "PL",
+      "file": "data/osm/pl/e20n50.geojson",
+      "bbox": [
+        20,
+        50,
+        22,
+        52
+      ],
+      "center": [
+        20.628,
+        50.692
+      ],
+      "count": 201,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e20n52",
+      "country": "PL",
+      "file": "data/osm/pl/e20n52.geojson",
+      "bbox": [
+        20,
+        52,
+        22,
+        54
+      ],
+      "center": [
+        21.446,
+        53.009
+      ],
+      "count": 304,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e20n54",
+      "country": "PL",
+      "file": "data/osm/pl/e20n54.geojson",
+      "bbox": [
+        20,
+        54,
+        22,
+        56
+      ],
+      "center": [
+        20.627,
+        54.15
+      ],
+      "count": 207,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e22n48",
+      "country": "PL",
+      "file": "data/osm/pl/e22n48.geojson",
+      "bbox": [
+        22,
+        48,
+        24,
+        50
+      ],
+      "center": [
+        22.683,
+        49.71
+      ],
+      "count": 78,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e22n50",
+      "country": "PL",
+      "file": "data/osm/pl/e22n50.geojson",
+      "bbox": [
+        22,
+        50,
+        24,
+        52
+      ],
+      "center": [
+        23.123,
+        50.556
+      ],
+      "count": 151,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e22n52",
+      "country": "PL",
+      "file": "data/osm/pl/e22n52.geojson",
+      "bbox": [
+        22,
+        52,
+        24,
+        54
+      ],
+      "center": [
+        22.617,
+        52.912
+      ],
+      "count": 114,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "osm-pl-e22n54",
+      "country": "PL",
+      "file": "data/osm/pl/e22n54.geojson",
+      "bbox": [
+        22,
+        54,
+        24,
+        56
+      ],
+      "center": [
+        22.651,
+        54.143
+      ],
+      "count": 10,
+      "attribution": "© OpenStreetMap contributors (ODbL)",
+      "updated": "2026-11-15"
     }
   ]
 }

@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[18.087023,47.759305]},"properties":{"id":"osm-w794191275","name":"Bunker presso Komárno","unnamed":true,"alt_names":[],"place":"Komárno","country":"SK","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – way/794191275","url":"https://www.openstreetmap.org/way/794191275"}]}}
+]}

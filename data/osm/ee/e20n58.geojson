@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[21.9973,58.504083]},"properties":{"id":"osm-n12007502559","name":"Bunker presso Kihelkonna","unnamed":true,"alt_names":[],"place":"Kihelkonna","country":"EE","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"abandoned","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/12007502559","url":"https://www.openstreetmap.org/node/12007502559"}]}}
+]}
