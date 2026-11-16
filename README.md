@@ -102,6 +102,6 @@ The 29 sample entries are well-known public sites, written from general knowledg
 
 ## Roadmap
 1. Static map with sample data (this version).
-2. A bigger dataset: OpenStreetMap import (done: Italy, France, Switzerland, Austria, Slovenia, Germany, Netherlands, Belgium, Luxembourg, Poland, Czechia, Slovakia, Estonia, Latvia, Lithuania; next: Greece, Albania, Balkans) and a catalogue of other sources.
+2. A bigger dataset: OpenStreetMap import (done: Italy, France, Switzerland, Austria, Slovenia, Germany, Netherlands, Belgium, Luxembourg, Poland, Czechia, Slovakia, Estonia, Latvia, Lithuania, Greece, Albania, Croatia, Bosnia and Herzegovina, Serbia, Montenegro, North Macedonia, Kosovo; next: UK, Scandinavia, Iberia) and a catalogue of other sources.
 3. A backend for submissions with review, edit history and photo uploads. This needs hosting beyond Aruba static/PHP, or a PHP + MariaDB version of the API.
 4. Downloadable public datasets.

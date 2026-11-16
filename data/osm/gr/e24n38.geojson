@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[24.008019,38.011778]},"properties":{"id":"osm-n9549249020","name":"Γερμανικό Οχυρό Β' Παγκοσμίου Πολέμου","alt_names":[],"place":"Ραφήνα","country":"GR","builder":"","category":"fortification","period":"ww2","built":"","function":"Postazione d'artiglieria","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/9549249020","url":"https://www.openstreetmap.org/node/9549249020"}],"period_source":"inferred:german-gr","period_note":"\"Tedesco\" nel nome: occupazione 1941–44"}}
+]}

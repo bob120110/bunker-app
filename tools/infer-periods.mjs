@@ -54,7 +54,7 @@ const NAME_RULES = [
   { id: 'dutch-lines', period: 'interwar', countries: ['NL'], re: /groepsschuilplaats|\bkazemat|grebbe|peel-raam|waterlinie/, why: 'Linee difensive olandesi, 1918–40' },
   { id: 'rupnik', period: 'interwar', countries: ['SI'], re: /alpsk\w* zid|rupnik/, why: 'Vallo Alpino / Linea Rupnik, 1931–41' },
   // WWII
-  { id: 'tobruk', period: 'ww2', re: /tobruk|tobrouk|ringstand/, why: 'Postazione "Tobruk", 1942–45' },
+  { id: 'tobruk', period: 'ww2', re: /tobruk|tobrouk|ringstand|ringstellung/, why: 'Postazione "Tobruk", 1942–45' },
   { id: 'weltkrieg-2', period: 'ww2', re: /\b(2\.|ii\.|zweiter)\s*weltkrieg/, why: '"2. Weltkrieg" nel nome' },
   { id: 'luftschutz', period: 'ww2', countries: ['DE', 'AT'], re: /hochbunker|tiefbunker|luftschutz|winkelturm|splitterschutz|spitzbunker|einmannbunker|flakturm|\bflak|flastg|schirachbunker|flugwache/, why: 'Rifugio antiaereo o postazione contraerea tedesca, 1940–45' },
   { id: 'atlantikwall-name', period: 'ww2', countries: ['FR', 'BE', 'NL'], re: /\bflak\b|encuvement|\bcuve\b|deutscher|\bwn\s?\d|\bstp\b|st[üu]tzpunkt|widerstandsnest|regelbau|\br\s?6\d\d\b/, why: 'Termini del Vallo Atlantico (Regelbau, WN, Flak…), 1942–44' },
@@ -72,11 +72,22 @@ const NAME_RULES = [
   { id: 'baltic-partisans', period: 'cold_war', countries: ['EE', 'LV', 'LT'], re: /metsaven|partizan|apygardos/, why: 'Partigiani antisovietici ("Fratelli della foresta"), 1944–53' },
   { id: 'missile-base', period: 'cold_war', countries: ['EE', 'LV', 'LT', 'PL', 'CZ', 'SK'], re: /raket|rakeet|raķe|r-12\b|r-14\b|branduolin|jadern/, why: 'Base missilistica o deposito nucleare sovietico, 1958–91' },
   { id: 'cs-civil-defence', period: 'cold_war', countries: ['CZ', 'SK'], re: /kryt civiln|\bco\b|čsla|civiln[ií] obrany/, why: 'Protezione civile cecoslovacca (CO) o Esercito popolare (ČSLA), 1950–89' },
+  // Greece and the former Yugoslavia
+  { id: 'bizani', period: 'other', countries: ['GR'], re: /μπιζαν/, why: 'Forti di Bizani, guerre balcaniche 1912–13' },
+  { id: 'metaxas-line', period: 'interwar', countries: ['GR'], re: /οχυρ|metaxas|μεταξ/, where: ([, lat]) => lat > 40.9, why: 'Forte nel nord della Grecia: Linea Metaxas, 1936–41' },
+  { id: 'german-gr', period: 'ww2', countries: ['GR'], re: /γερμαν/, why: '"Tedesco" nel nome: occupazione 1941–44' },
+  { id: 'jna', period: 'cold_war', countries: ['SI', 'HR', 'BA', 'RS', 'ME', 'MK', 'XK'], re: /\bjna\b|narodn\w* armij|karaul/, why: 'Esercito popolare jugoslavo (JNA) o posto di frontiera, 1945–91' },
+  // A year in the name
+  { id: 'year-ww2', period: 'ww2', re: /\b19(39|4[0-5])\b/, why: 'Anno 1939–45 nel nome' },
+  { id: 'year-ww1', period: 'ww1', re: /\b191[4-8]\b/, why: 'Anno 1914–18 nel nome' },
   // Hardened aircraft shelters: a 1960s–80s design everywhere.
   { id: 'aircraft-shelter', period: 'cold_war', re: /ricovero corazzato per aerei/, why: 'Ricovero corazzato per aerei: tipico 1965–90' },
   // Cold War
   { id: 'cold-war-military', period: 'cold_war', re: /\bmace\b|\bnike\b|\bhawk\b|pershing|raketenstellung|\bnato\b|\botan\b|bundeswehr|u\.?s\.? army|nva\b/, why: 'Basi missilistiche e militari NATO/Bundeswehr, 1950–90' },
   { id: 'civil-defence', period: 'cold_war', countries: ['CH', 'DE', 'AT'], re: /zivilschutz|schutzraum|atombunker|abc-schutz|regierungsbunker/, why: 'Protezione civile/antiatomica, 1950–90' },
+  // Albania: the Hoxha programme built bunkers everywhere (1967–86); older
+  // structures are rare enough that "probabile" is a fair label for any site.
+  { id: 'albania-hoxha', period: 'cold_war', countries: ['AL'], re: /(?:)/, why: 'Albania: programma di bunkerizzazione di Hoxha, 1967–86' },
 ];
 
 // ---------- geometry (optional) ----------

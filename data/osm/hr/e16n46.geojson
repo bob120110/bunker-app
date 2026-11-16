@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[16.917577,46.058276]},"properties":{"id":"osm-n12863426271","name":"Ratni bunker - Novigrad Podravski","alt_names":[],"place":"Javorovac","country":"HR","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/12863426271","url":"https://www.openstreetmap.org/node/12863426271"}]}}
+]}

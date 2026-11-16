@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[22.062711,43.328682]},"properties":{"id":"osm-n10961108590","name":"Bunker presso Манастир","unnamed":true,"alt_names":[],"place":"Манастир","country":"RS","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/10961108590","url":"https://www.openstreetmap.org/node/10961108590"}]}}
+]}
