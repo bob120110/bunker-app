@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[20.689793,69.068963]},"properties":{"id":"osm-n9891504117","name":"Mallan luonnonpuiston korsu","alt_names":["Dugout in Malla"],"place":"Kilpisjärvi","country":"FI","builder":"","category":"underground","period":"ww2","built":"","function":"","dimensions":"","status":"unknown","access":"Accessibile","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/9891504117","url":"https://www.openstreetmap.org/node/9891504117"}],"period_source":"inferred:salpa","period_note":"Linea Salpa / Mannerheim, ricoveri \"korsu\", 1939–44"}}
+]}

@@ -34,9 +34,9 @@ const UA = 'BunkerAtlasDataCheck/0.6 (open data project)';
 
 const text = (p) => [p.name, ...(p.alt_names || []), p.function].filter(Boolean).join(' | ').toLowerCase();
 const inNE = ([lng, lat]) => lng > 5.3 && lat > 47.3; // north-eastern France
-const inEurope = ([lng, lat]) => lng > -6 && lng < 10 && lat > 41 && lat < 54; // mainland France/Benelux, not overseas
+const inEurope = ([lng, lat]) => lng > -11 && lng < 32 && lat > 41 && lat < 72; // mainland Europe, not overseas territories
 // Older fortresses (pre-1914) sit in the same zones; never date them by location.
-const OLD_FORT = /\b(fort|forte|feste|festung|redoute|citadelle|zitadelle|ch[âa]teau|tour)\b/;
+const OLD_FORT = /\b(fort|forte|feste|festung|redoute|citadelle|zitadelle|ch[âa]teau|tour|tower|martello|castle|vestvold\w*)\b/;
 
 const NAME_RULES = [
   // WWI
@@ -57,7 +57,7 @@ const NAME_RULES = [
   { id: 'tobruk', period: 'ww2', re: /tobruk|tobrouk|ringstand|ringstellung/, why: 'Postazione "Tobruk", 1942–45' },
   { id: 'weltkrieg-2', period: 'ww2', re: /\b(2\.|ii\.|zweiter)\s*weltkrieg/, why: '"2. Weltkrieg" nel nome' },
   { id: 'luftschutz', period: 'ww2', countries: ['DE', 'AT'], re: /hochbunker|tiefbunker|luftschutz|winkelturm|splitterschutz|spitzbunker|einmannbunker|flakturm|\bflak|flastg|schirachbunker|flugwache/, why: 'Rifugio antiaereo o postazione contraerea tedesca, 1940–45' },
-  { id: 'atlantikwall-name', period: 'ww2', countries: ['FR', 'BE', 'NL'], re: /\bflak\b|encuvement|\bcuve\b|deutscher|\bwn\s?\d|\bstp\b|st[üu]tzpunkt|widerstandsnest|regelbau|\br\s?6\d\d\b/, why: 'Termini del Vallo Atlantico (Regelbau, WN, Flak…), 1942–44' },
+  { id: 'atlantikwall-name', period: 'ww2', countries: ['FR', 'BE', 'NL', 'DK', 'NO'], re: /\bflak\b|encuvement|\bcuve\b|deutscher|\bwn\s?\d|\bwr\s?\d|\bstp\b|st[üu]tzpunkt|widerstandsnest|regelbau|\br\s?6\d\d\b|w[üu]rzburg|freya|mammut|maultier|seeburg|stellung/, why: 'Termini del Vallo Atlantico (Regelbau, WN, Flak…), 1942–44' },
   { id: 'rifugio-antiaereo', period: 'ww2', countries: ['IT'], re: /antiaere/, why: 'Rifugio antiaereo, 1940–45' },
   { id: 'swiss-army', period: 'ww2', countries: ['CH'], re: /infanteriebunker|infanteriewerk|artilleriewerk|\blmg\b|unterstand|felsenwerk|infanteriekanonen/, why: 'Fortificazioni svizzere del Ridotto nazionale, per lo più 1937–45' },
   // Central and Eastern Europe
@@ -80,6 +80,17 @@ const NAME_RULES = [
   // A year in the name
   { id: 'year-ww2', period: 'ww2', re: /\b19(39|4[0-5])\b/, why: 'Anno 1939–45 nel nome' },
   { id: 'year-ww1', period: 'ww1', re: /\b191[4-8]\b/, why: 'Anno 1914–18 nel nome' },
+  // Western and Northern Europe
+  { id: 'world-war-words', period: 'ww2', re: /segunda guerra mundial|second world war|world war (ii|2)\b|\bww ?ii\b|seconde guerre mondiale|andre verdenskrig|anden verdenskrig|andra världskriget|toisen maailmansodan/, why: '"Seconda guerra mondiale" nel nome o nella descrizione' },
+  { id: 'uk-older', period: 'other', countries: ['GB', 'IE'], re: /victorian|napoleonic|palmerston|martello|georgian|\b1[78]\d\d\b/, why: 'Difese vittoriane o napoleoniche, prima del 1914' },
+  { id: 'uk-cold-war', period: 'cold_war', countries: ['GB'], re: /\broc\b|royal observer corps|monitoring post|nuclear|\brsg\b|regional seat|rgh?q|emergency cent|war room/, why: 'Royal Observer Corps o bunker antiatomico britannico, 1955–91' },
+  { id: 'uk-1940', period: 'ww2', countries: ['GB'], re: /pillbox|\bfw3|type 2[2-8]\b|spigot|home guard|battle h\.?q|anti-?tank|stop line|chain home|gun emplacement|blockhouse/, why: 'Pillbox e difese britanniche anti-invasione, 1940–41' },
+  { id: 'dk-old', period: 'other', countries: ['DK'], re: /vestvold|voldpunkt|befæstning|krudtmagasin/, why: 'Fortificazioni di Copenaghen, 1886–1918' },
+  { id: 'dk-cold-war', period: 'cold_war', countries: ['DK', 'NO', 'SE', 'FI'], re: /regeringsanl|\brrgc\b|stril|bunker for regjering|ledningsbunker/, why: 'Bunker governativo o radar della Guerra fredda, 1950–90' },
+  { id: 'per-albin', period: 'ww2', countries: ['SE'], re: /per albin|korvlinje|skånelinje/, why: 'Linea Per Albin (Svezia), 1939–45' },
+  { id: 'salpa', period: 'ww2', countries: ['FI'], re: /salpa|\bkorsu|ter[äa]spes[äa]ke|kk-pes[äa]ke|virolahti|mannerheim/, why: 'Linea Salpa / Mannerheim, ricoveri "korsu", 1939–44' },
+  { id: 'linea-p', period: 'cold_war', countries: ['ES'], re: /l[íi]nea p\b|organizaci[óo]n defensiva de los pirineos|\bodp\b/, why: 'Linea P dei Pirenei, 1944–59' },
+  { id: 'spanish-civil-war', period: 'interwar', countries: ['ES'], re: /guerra civil|republican|trinchera|frente\b|refugi|antiaeri|nacional/, why: 'Guerra civile spagnola, 1936–39' },
   // Hardened aircraft shelters: a 1960s–80s design everywhere.
   { id: 'aircraft-shelter', period: 'cold_war', re: /ricovero corazzato per aerei/, why: 'Ricovero corazzato per aerei: tipico 1965–90' },
   // Cold War
@@ -134,7 +145,7 @@ const GEO_RULES = [];
 const coastFile = opt('--coast'); const bordersFile = opt('--borders');
 if (coastFile) {
   const coast = loadLines(coastFile);
-  GEO_RULES.push({ id: 'atlantikwall-coast', period: 'ww2', countries: ['FR', 'BE', 'NL'], why: 'Entro 2 km dalla costa: Vallo Atlantico / Vallo Mediterraneo, 1942–44', test: (c) => inEurope(c) && distKm(coast, c, 2) <= 2 });
+  GEO_RULES.push({ id: 'atlantikwall-coast', period: 'ww2', countries: ['FR', 'BE', 'NL', 'DK', 'NO', 'GB'], why: 'Entro 2 km dalla costa: Vallo Atlantico, Vallo Mediterraneo o difese costiere britanniche, 1940–45', test: (c) => inEurope(c) && distKm(coast, c, 2) <= 2 });
 }
 if (bordersFile) {
   const pair = (a, list) => (p) => {

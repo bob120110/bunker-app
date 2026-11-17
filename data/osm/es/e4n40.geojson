@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[4.127677,40.053134]},"properties":{"id":"osm-n9828692139","name":"Bunker presso es Mercadal","unnamed":true,"alt_names":[],"place":"es Mercadal","country":"ES","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/9828692139","url":"https://www.openstreetmap.org/node/9828692139"}]}}
+]}

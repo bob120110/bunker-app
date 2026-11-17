@@ -302,6 +302,12 @@ if (!features.length) {
   console.error(`${cc}: no bunkers found — not writing anything (Overpass problem?)`);
   process.exit(1);
 }
+// A broken town-name answer leaves every bunker named after the country.
+const withTown = features.filter((f) => f.properties.place !== COUNTRY_NAME).length;
+if (features.length >= 50 && withTown / features.length < 0.2) {
+  console.error(`${cc}: only ${withTown} of ${features.length} bunkers got a nearby town — the town-name answer looks broken. Not writing anything; try again.`);
+  process.exit(1);
+}
 
 // ---------- write ----------
 

@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-10.115371,53.414875]},"properties":{"id":"osm-n2584337831","name":"Lookout Post 53 (LOP 53 WW2)","alt_names":[],"place":"Ballyconneely","country":"IE","builder":"","category":"military","period":"ww2","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/2584337831","url":"https://www.openstreetmap.org/node/2584337831"}]}}
+]}

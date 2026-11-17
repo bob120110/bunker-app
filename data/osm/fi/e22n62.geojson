@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[22.101545,62.744393]},"properties":{"id":"osm-w803102319","name":"Tainuskylän korsu","alt_names":[],"place":"Pyörni","country":"FI","builder":"","category":"military","period":"ww2","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – way/803102319","url":"https://www.openstreetmap.org/way/803102319"}],"period_source":"inferred:salpa","period_note":"Linea Salpa / Mannerheim, ricoveri \"korsu\", 1939–44"}}
+]}

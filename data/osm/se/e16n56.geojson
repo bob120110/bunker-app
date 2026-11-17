@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[16.357176,56.662378]},"properties":{"id":"osm-n9658288630","name":"Bastion Dryaden","alt_names":[],"place":"Kalmar","country":"SE","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/9658288630","url":"https://www.openstreetmap.org/node/9658288630"}]}}
+]}

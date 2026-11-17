@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[15.64,58.4]},"properties":{"id":"osm-n10044176775","name":"Bunker presso Linköping","unnamed":true,"alt_names":[],"place":"Linköping","country":"SE","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"Proprietà privata o accesso vietato","visibility":"approximate","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/10044176775","url":"https://www.openstreetmap.org/node/10044176775"}]}}
+]}

@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[29.317312,66.368248]},"properties":{"id":"osm-n13734102187","name":"Bunker presso Liikasenvaara","unnamed":true,"alt_names":[],"place":"Liikasenvaara","country":"FI","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/13734102187","url":"https://www.openstreetmap.org/node/13734102187"}]}}
+]}

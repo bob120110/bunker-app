@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-8.454606,54.570148]},"properties":{"id":"osm-n4032155503","name":"WWII Lookout","alt_names":[],"place":"Killybegs","country":"IE","builder":"","category":"fortification","period":"ww2","built":"","function":"Postazione fortificata (pillbox)","dimensions":"","status":"abandoned","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/4032155503","url":"https://www.openstreetmap.org/node/4032155503"}]}}
+]}

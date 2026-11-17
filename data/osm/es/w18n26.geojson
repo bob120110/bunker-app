@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-17.985631,27.638649]},"properties":{"id":"osm-w682172364","name":"Struttura militare presso El Pinar","unnamed":true,"alt_names":[],"place":"El Pinar","country":"ES","builder":"","category":"other","period":"unknown","built":"","function":"Osservatorio","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – way/682172364","url":"https://www.openstreetmap.org/way/682172364"}]}}
+]}

@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[13.122644,63.385957]},"properties":{"id":"osm-n12040130945","name":"Installazione sotterranea presso Åre Björnen","unnamed":true,"alt_names":[],"place":"Åre Björnen","country":"SE","builder":"","category":"underground","period":"unknown","built":"","function":"Deposito munizioni","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/12040130945","url":"https://www.openstreetmap.org/node/12040130945"}]}}
+]}

@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[21.706019,65.791681]},"properties":{"id":"osm-w1093611528","name":"Norra Åbergsfästet","alt_names":[],"place":"Södra Svartbyn","country":"SE","builder":"","category":"military","period":"unknown","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – way/1093611528","url":"https://www.openstreetmap.org/way/1093611528"}]}}
+]}

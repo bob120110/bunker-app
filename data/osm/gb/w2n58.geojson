@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-1.303024,59.883151]},"properties":{"id":"osm-n13698333599","name":"Pillbox","alt_names":[],"place":"Toab","country":"GB","builder":"","category":"fortification","period":"ww2","built":"","function":"Postazione fortificata (pillbox)","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – node/13698333599","url":"https://www.openstreetmap.org/node/13698333599"}],"period_source":"inferred:uk-1940","period_note":"Pillbox e difese britanniche anti-invasione, 1940–41"}}
+]}

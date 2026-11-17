@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-8.563599,57.810559]},"properties":{"id":"osm-w174535623","name":"Gunna","alt_names":[],"place":"Regno Unito","country":"GB","builder":"","category":"military","period":"ww2","built":"","function":"","dimensions":"","status":"unknown","access":"","visibility":"public","reliability":"partial","origin":"osm","sources":[{"title":"OpenStreetMap – way/174535623","url":"https://www.openstreetmap.org/way/174535623"}],"period_source":"inferred:atlantikwall-coast","period_note":"Entro 2 km dalla costa: Vallo Atlantico, Vallo Mediterraneo o difese costiere britanniche, 1940–45"}}
+]}
