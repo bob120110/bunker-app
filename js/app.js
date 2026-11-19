@@ -84,10 +84,10 @@ const layerBoxes = (l) => l.bboxes || (l.bbox ? [l.bbox] : null);
 const filtersActive = () => state.categories.size < Object.keys(CATEGORIES).length
   || !!state.period || !!state.status || state.query.trim().length >= 3;
 
-async function loadVisibleLayers({ all = false } = {}) {
+async function loadVisibleLayers({ all = false, ignoreZoom = false } = {}) {
   const b = map.getBounds();
   const view = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
-  const detail = map.getZoom() >= DETAIL_ZOOM;
+  const detail = ignoreZoom || map.getZoom() >= DETAIL_ZOOM;
   const wanted = (l) => {
     const boxes = layerBoxes(l);
     if (!boxes) return true; // curated list: always
@@ -122,6 +122,8 @@ try { regionNames = new Intl.DisplayNames(['it'], { type: 'region' }); } catch {
 const countryName = (cc) => { try { return regionNames?.of(cc) || cc; } catch { return cc; } };
 
 const safeUrl = (u) => (/^https?:\/\//i.test(u || '') ? u : null);
+
+const PROBABLE = ['in', 'inferred:', ['coalesce', ['get', 'period_source'], '']];
 
 function categoryColorExpr() {
   const expr = ['match', ['get', 'category']];
@@ -221,11 +223,13 @@ function addBunkerLayers(map, attribution) {
   });
   map.addLayer({
     id: 'points', type: 'circle', source: 'bunkers', filter: ['!', ['has', 'point_count']],
+    // Documented period: solid pin. Guessed ("probabile") period: hollow ring
+    // in the category colour, so the two are distinguishable at a glance.
     paint: {
-      'circle-color': categoryColorExpr(),
+      'circle-color': ['case', PROBABLE, '#ffffff', categoryColorExpr()],
       'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 5, 12, 8],
-      'circle-stroke-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, 2],
-      'circle-stroke-color': ['case', ['boolean', ['feature-state', 'selected'], false], '#f1c40f', '#fff'],
+      'circle-stroke-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, PROBABLE, 3, 2],
+      'circle-stroke-color': ['case', ['boolean', ['feature-state', 'selected'], false], '#f1c40f', PROBABLE, categoryColorExpr(), '#fff'],
     },
   });
 
@@ -481,8 +485,11 @@ function renderResults(list) {
   ul.innerHTML = '';
   const bounds = map.getBounds();
   const inView = list.filter((f) => bounds.contains(f.geometry.coordinates));
-  const sorted = inView.sort((a, b) => (!!a.properties.unnamed - !!b.properties.unnamed)
-    || a.properties.name.localeCompare(b.properties.name, 'it'));
+  const dist = state.nearMe ? new Map(inView.map((f) => [f, metres(state.nearMe, f.geometry.coordinates)])) : null;
+  const sorted = dist
+    ? inView.sort((a, b) => dist.get(a) - dist.get(b))
+    : inView.sort((a, b) => (!!a.properties.unnamed - !!b.properties.unnamed)
+      || a.properties.name.localeCompare(b.properties.name, 'it'));
   const shown = sorted.slice(0, LIST_LIMIT);
   $('#results-note').textContent = loadingAll
     ? 'Carico i dati di tutte le zone per applicare il filtro…'
@@ -491,15 +498,134 @@ function renderResults(list) {
     : inView.length === list.length + pending
       ? ''
       : `${inView.length.toLocaleString('it-IT')} nella zona visibile${inView.length > LIST_LIMIT ? `, ne mostro ${LIST_LIMIT}` : ''}. Sposta o ingrandisci la mappa per vederne altre.`;
+  if (state.nearMe && !loadingAll) {
+    const note = $('#results-note');
+    note.textContent = 'Ordinati per distanza dalla tua posizione. ';
+    const off = document.createElement('button');
+    off.type = 'button';
+    off.className = 'link-btn';
+    off.textContent = 'Annulla';
+    off.onclick = () => { state.nearMe = null; renderResults(filtered()); };
+    note.appendChild(off);
+  }
   for (const f of shown) {
     const p = f.properties;
     const li = document.createElement('li');
     li.innerHTML = `<button type="button" data-id="${esc(p.id)}" class="${p.id === state.selectedId ? 'active' : ''}">
-      <span class="swatch" style="background:${CATEGORIES[p.category]?.color || '#888'}"></span>
-      <span><strong>${esc(p.name)}</strong><small>${esc(p.place)}</small></span></button>`;
+      <span class="swatch${(p.period_source || '').startsWith('inferred:') ? ' ring' : ''}" style="--c:${CATEGORIES[p.category]?.color || '#888'}"></span>
+      <span><strong>${esc(p.name)}</strong><small>${esc(p.place)}${dist ? ` · ${formatDistance(dist.get(f))}` : ''}</small></span></button>`;
     li.querySelector('button').onclick = () => select(p.id, { fly: true });
     ul.appendChild(li);
   }
+}
+
+function metres([lng1, lat1], [lng2, lat2]) {
+  const r = (x) => x * Math.PI / 180;
+  const h = Math.sin(r(lat2 - lat1) / 2) ** 2 + Math.cos(r(lat1)) * Math.cos(r(lat2)) * Math.sin(r(lng2 - lng1) / 2) ** 2;
+  return 2 * 6371000 * Math.asin(Math.sqrt(h));
+}
+
+const formatDistance = (m) => (m < 1000
+  ? `${Math.round(m / 10) * 10} m`
+  : `${(m / 1000).toLocaleString('it-IT', { maximumFractionDigits: m < 10000 ? 1 : 0 })} km`);
+
+// "Vicino a me": uses the map's locate control (the browser asks for permission),
+// then lists the bunkers in view sorted by distance from the user.
+function setupNearMe(geolocate) {
+  const btn = $('#near-me');
+  btn.onclick = () => {
+    if (!('geolocation' in navigator)) { $('#results-note').textContent = 'La posizione non è disponibile su questo dispositivo.'; return; }
+    btn.disabled = true;
+    btn.textContent = '◎ Cerco la posizione…';
+    if (!geolocate.trigger()) { btn.disabled = false; btn.textContent = '◎ Vicino a me'; }
+  };
+  geolocate.on('geolocate', (e) => {
+    state.nearMe = [e.coords.longitude, e.coords.latitude];
+    btn.disabled = false;
+    btn.textContent = '◎ Vicino a me';
+    if (window.matchMedia('(max-width: 720px)').matches && document.body.classList.contains('sidebar-closed')) $('#toggle-sidebar').click();
+    map.once('moveend', () => loadVisibleLayers().then(() => renderResults(filtered())));
+  });
+  geolocate.on('error', () => {
+    btn.disabled = false;
+    btn.textContent = '◎ Vicino a me';
+    $('#results-note').textContent = 'Posizione non disponibile: controlla di aver dato il permesso al browser.';
+  });
+}
+
+// ---------- open data download ----------
+//
+// Exports the sites currently in view, with the active filters applied, as
+// GeoJSON or CSV. Squares in view are fetched first even when zoomed out.
+
+const EXPORT_FIELDS = ['id', 'name', 'alt_names', 'lat', 'lon', 'country', 'place', 'category', 'period', 'period_source',
+  'period_note', 'built', 'builder', 'function', 'dimensions', 'status', 'access', 'visibility', 'reliability', 'sources'];
+
+async function exportList() {
+  await loadVisibleLayers({ ignoreZoom: true });
+  const b = map.getBounds();
+  return filtered().filter((f) => b.contains(f.geometry.coordinates));
+}
+
+function cleanProps(p) {
+  const out = {};
+  for (const [k, v] of Object.entries(p)) if (!k.startsWith('_')) out[k] = v;
+  return out;
+}
+
+function toCsv(list) {
+  const cell = (v) => {
+    const s = v == null ? '' : String(v);
+    return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const rows = list.map((f) => {
+    const p = f.properties;
+    const [lon, lat] = f.geometry.coordinates;
+    const v = { ...p, lat, lon, alt_names: (p.alt_names || []).join(' | '), sources: (p.sources || []).map((s) => s.url).join(' ') };
+    return EXPORT_FIELDS.map((k) => cell(v[k])).join(',');
+  });
+  // BOM so Excel opens the accents correctly.
+  return '\ufeff' + [EXPORT_FIELDS.join(','), ...rows].join('\r\n') + '\r\n';
+}
+
+function saveFile(name, type, text) {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+function setupDownload() {
+  const dlg = $('#download-dialog');
+  const summary = $('#download-summary');
+  let list = [];
+  const stamp = () => new Date().toISOString().slice(0, 10);
+  $('#download-open').onclick = async () => {
+    summary.textContent = 'Preparo i dati della zona visibile…';
+    $('#download-geojson').disabled = $('#download-csv').disabled = true;
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    list = await exportList();
+    summary.textContent = list.length
+      ? `${list.length.toLocaleString('it-IT')} strutture nella zona visibile${filtersActive() ? ', con i filtri attivi' : ''}.`
+        + (list.length > 20000 ? ' Il file sarà grande: ingrandisci la mappa per scaricare meno dati.' : '')
+      : 'Nessuna struttura nella zona visibile con i filtri attivi.';
+    $('#download-geojson').disabled = $('#download-csv').disabled = !list.length;
+  };
+  $('#download-geojson').onclick = () => {
+    const fc = {
+      type: 'FeatureCollection',
+      license: 'Dati importati: ODbL 1.0 (https://opendatacommons.org/licenses/odbl/)',
+      attribution: '© OpenStreetMap contributors; Bunker Atlas (https://bob120110.github.io/bunker-app/)',
+      generated: new Date().toISOString(),
+      features: list.map((f) => ({ type: 'Feature', geometry: f.geometry, properties: cleanProps(f.properties) })),
+    };
+    saveFile(`bunker-atlas-${stamp()}.geojson`, 'application/geo+json', JSON.stringify(fc));
+  };
+  $('#download-csv').onclick = () => saveFile(`bunker-atlas-${stamp()}.csv`, 'text/csv;charset=utf-8', toCsv(list));
 }
 
 function row(label, value) {
@@ -618,7 +744,10 @@ async function main() {
   });
   window.bunkerAtlas = { map, state }; // handy for debugging in the browser console
   map.addControl(new maplibregl.NavigationControl(), 'top-right');
-  map.addControl(new maplibregl.GeolocateControl({ trackUserLocation: false }), 'top-right');
+  const geolocate = new maplibregl.GeolocateControl({ trackUserLocation: false, fitBoundsOptions: { maxZoom: 11 } });
+  map.addControl(geolocate, 'top-right');
+  setupNearMe(geolocate);
+  setupDownload();
   map.addControl(new maplibregl.ScaleControl(), 'bottom-left');
   map.addControl(new BasemapControl(), 'top-left');
 

@@ -9,6 +9,9 @@ This is the **static first version**: a map with no backend. It's plain HTML, CS
 - One colour per category. Nearby points group into clusters until you zoom in.
 - Filters by category, period and status. The search box finds bunkers by name, alternate name, nearest town or country, and also suggests places (regions, valleys, towns) via [Photon](https://photon.komoot.io), moving the map there. Only the search text and map centre are sent to Photon; place search needs a connection.
 - A detail card for each structure, with a reliability label and sources.
+- **Map pins:** a solid pin means the period is documented (or not given). A hollow ring means the period is a "probabile" estimate.
+- **"Vicino a me"** (near me) uses the browser's location (it asks permission first) and sorts the bunkers in view by distance from you.
+- **"Scarica i dati"** (download) exports the bunkers in the current view, with active filters applied, as GeoJSON or CSV (UTF-8 with BOM, opens in Excel). The license (ODbL for imported data) is stated in the dialog and in the GeoJSON.
 - Link to a single structure with `#<id>`, for example `index.html#it-soratte`.
 - Publication levels from the brief:
   - `public`: shown at its exact position.
